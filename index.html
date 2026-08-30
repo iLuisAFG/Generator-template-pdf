@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generador de Plantillas de Impresión</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="bg-gray-950 text-gray-100 min-h-screen">
+    <header class="bg-gray-900 border-b border-gray-700 px-6 py-4 shadow-lg">
+      <div class="max-w-screen-xl mx-auto flex items-center gap-3">
+        <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        <div>
+          <h1 class="text-xl font-bold text-white tracking-tight">Generador de Plantillas de Impresión</h1>
+          <p class="text-xs text-gray-400">Distribuye imágenes y exporta a PDF listo para imprimir</p>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-screen-xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
+      <aside class="space-y-4">
+        <section class="card">
+          <h2 class="section-title">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            Imagen de diseño
+          </h2>
+          <label id="dropZone" class="drop-zone flex flex-col items-center justify-center gap-2 cursor-pointer rounded-xl border-2 border-dashed border-gray-600 bg-gray-800 hover:border-indigo-400 transition-colors p-6 text-center">
+            <svg class="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+            <span class="text-sm text-gray-400">Arrastra o <span class="text-indigo-400 font-medium">selecciona</span> PNG/JPG</span>
+            <input id="imgInput" type="file" accept="image/png,image/jpeg" class="hidden" />
+          </label>
+          <div id="imgPreviewWrap" class="hidden mt-3 relative">
+            <img id="imgPreview" class="rounded-lg w-full object-contain max-h-40 bg-gray-900 border border-gray-700" />
+            <button id="imgClear" class="absolute top-1 right-1 bg-red-600 hover:bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">x</button>
+            <p id="imgInfo" class="text-xs text-gray-400 mt-1 text-center"></p>
+          </div>
+        </section>
+        <section class="card">
+          <h2 class="section-title">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+            Dimensiones del diseño
+          </h2>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="label">Ancho (cm)</label>
+              <input id="designW" type="number" min="0.5" max="200" step="0.1" value="5" class="input" />
+            </div>
+            <div>
+              <label class="label">Alto (cm)</label>
+              <input id="designH" type="number" min="0.5" max="200" step="0.1" value="5" class="input" />
+            </div>
+          </div>
+        </section>
+        <section class="card">
+          <h2 class="section-title">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            Papel y margenes
+          </h2>
+          <div class="space-y-3">
+            <div>
+              <label class="label">Tamano de papel</label>
+              <select id="paperSize" class="input">
+                <option value="letter">Carta (21.59 x 27.94 cm)</option>
+                <option value="a4" selected>A4 (21 x 29.7 cm)</option>
+                <option value="tabloid">Tabloide (27.94 x 43.18 cm)</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Orientacion</label>
+              <div class="flex gap-2">
+                <button id="btnPortrait" class="orient-btn orient-active flex-1" data-orient="portrait">Vertical</button>
+                <button id="btnLandscape" class="orient-btn flex-1" data-orient="landscape">Horizontal</button>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="label">Margen (cm)</label>
+                <input id="margin" type="number" min="0" max="5" step="0.05" value="0.5" class="input" />
+              </div>
+              <div>
+                <label class="label">Separacion (cm)</label>
+                <input id="gap" type="number" min="0" max="5" step="0.05" value="0.3" class="input" />
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="card">
+          <h2 class="section-title">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+            Copias y opciones
+          </h2>
+          <div class="space-y-3">
+            <div>
+              <label class="label">Cantidad de copias</label>
+              <input id="copies" type="number" min="1" max="9999" value="10" class="input" />
+            </div>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <div class="toggle-wrap relative">
+                <input id="cutMarks" type="checkbox" class="sr-only" checked />
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </div>
+              <span class="text-sm text-gray-300">Marcas de corte</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <div class="toggle-wrap relative">
+                <input id="fillPage" type="checkbox" class="sr-only" />
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </div>
+              <span class="text-sm text-gray-300">Rellenar pagina completa (ignorar cantidad)</span>
+            </label>
+          </div>
+        </section>
+        <div class="space-y-2">
+          <button id="btnPreview" class="w-full btn-secondary flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+            Actualizar vista previa
+          </button>
+          <button id="btnExport" class="w-full btn-primary flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            Exportar PDF
+          </button>
+        </div>
+      </aside>
+      <section class="flex flex-col gap-4 min-w-0">
+        <div id="statsBar" class="hidden bg-gray-800 border border-gray-700 rounded-xl px-5 py-3 flex flex-wrap gap-x-6 gap-y-1">
+          <span class="stat-item" id="statPages">paginas</span>
+          <span class="stat-item" id="statCopiesPerPage">copias/pagina</span>
+          <span class="stat-item" id="statTotal">total</span>
+          <span class="stat-item" id="statGrid">grid</span>
+        </div>
+        <div id="previewArea" class="flex-1 bg-gray-900 border border-gray-800 rounded-xl p-4 overflow-auto min-h-[400px] flex flex-col items-center gap-6">
+          <div id="placeholder" class="flex flex-col items-center justify-center h-full py-20 text-center gap-4">
+            <svg class="w-16 h-16 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" /></svg>
+            <p class="text-gray-500 text-sm">Carga una imagen y configura las opciones<br>para ver la vista previa aqui.</p>
+          </div>
+          <div id="pagesContainer" class="hidden flex flex-col items-center gap-6 w-full"></div>
+        </div>
+      </section>
+    </main>
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden">
+      <div id="toastInner" class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl text-sm font-medium">
+        <span id="toastIcon"></span>
+        <span id="toastMsg"></span>
+      </div>
+    </div>
+    <div id="loadingOverlay" class="fixed inset-0 bg-black/70 z-50 hidden items-center justify-center">
+      <div class="bg-gray-800 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl">
+        <div class="spinner"></div>
+        <p id="loadingMsg" class="text-sm text-gray-300">Generando PDF...</p>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
