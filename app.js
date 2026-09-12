@@ -1,4 +1,4 @@
-﻿// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════
 //  app.js  —  Generador de Plantillas de Impresión v2
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -602,7 +602,13 @@ borderStylePicker.querySelectorAll('.bs-btn').forEach(btn => {
     btn.classList.add('bs-active');
     borderStyle = btn.dataset.style;
     const show = borderStyle !== 'none';
-    borderControls.style.display = show ? '' : 'none';
+    if (show) {
+      borderControls.classList.remove('hidden');
+      borderControls.style.display = '';
+    } else {
+      borderControls.classList.add('hidden');
+      borderControls.style.display = 'none';
+    }
     updateBorderLivePreview();
     triggerAutoPreview();
   });
