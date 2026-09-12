@@ -1,23 +1,23 @@
-// ═══════════════════════════════════════════════════════════════════════
-//  app.js  —  Generador de Plantillas de Impresión v2
-// ═══════════════════════════════════════════════════════════════════════
+﻿// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  app.js  â€”  Generador de Plantillas de ImpresiÃ³n v2
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-/* ── Paper sizes in mm ── */
+/* â”€â”€ Paper sizes in mm â”€â”€ */
 const PAPER_SIZES = {
   letter:  { w: 215.9, h: 279.4 },
   a4:      { w: 210,   h: 297   },
   tabloid: { w: 279.4, h: 431.8 },
 };
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    STATE
    images = [{ id, name, dataURL, wCm, hCm, copies }]
-═══════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 let images      = [];   // array of image objects
 let orientation = 'portrait';
 let borderStyle = 'none';  // none | solid | dashed | dotted
 
-/* ── DOM refs ── */
+/* â”€â”€ DOM refs â”€â”€ */
 const imgInput      = document.getElementById('imgInput');
 const dropZone      = document.getElementById('dropZone');
 const imgList       = document.getElementById('imgList');
@@ -55,20 +55,20 @@ const borderColorHex    = document.getElementById('borderColorHex');
 const borderOpacity     = document.getElementById('borderOpacity');
 const borderLiveCanvas  = document.getElementById('borderLiveCanvas');
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  UTILS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function showToast(msg, type = 'success') {
   toastInner.className = 'toast-inner toast-' + type;
-  toastIcon.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  toastIcon.textContent = type === 'success' ? 'âœ“' : type === 'error' ? 'âœ•' : 'â„¹';
   toastMsg.textContent = msg;
   toast.classList.remove('hidden');
   clearTimeout(toast._t);
   toast._t = setTimeout(() => toast.classList.add('hidden'), 3500);
 }
 
-function setLoading(visible, msg = 'Generando PDF…') {
+function setLoading(visible, msg = 'Generando PDFâ€¦') {
   loadingMsg.textContent = msg;
   loadingOverlay.style.display = visible ? 'flex' : 'none';
 }
@@ -90,9 +90,9 @@ function hexToRGBA(hex, pct) {
 let _uid = 0;
 const uid = () => ++_uid;
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  IMAGE MANAGEMENT
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function addImageFile(file) {
   return new Promise((resolve) => {
@@ -150,7 +150,7 @@ function renderImgList() {
       <div class="img-item-header">
         <img class="img-thumb" src="${img.dataURL}" alt="${img.name}" />
         <span class="img-name" title="${img.name}">${img.name}</span>
-        <button class="img-delete" data-del="${img.id}" title="Eliminar">✕</button>
+        <button class="img-delete" data-del="${img.id}" title="Eliminar">âœ•</button>
       </div>
       <div class="img-item-body">
         <div>
@@ -190,9 +190,9 @@ function renderImgList() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  BORDER CONTROLS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function getBorderOpts() {
   return {
@@ -206,7 +206,7 @@ function getBorderOpts() {
 /** Draw border on a canvas context (in canvas-px units) */
 function drawBorderCtx(ctx, x, y, w, h, b, SCALE) {
   if (b.style === 'none') return;
-  const lw = b.width * SCALE * 0.35;  // pt → mm-ish → px
+  const lw = b.width * SCALE * 0.35;  // pt â†’ mm-ish â†’ px
   ctx.save();
   ctx.strokeStyle = hexToRGBA(b.color, b.opacity);
   ctx.lineWidth   = Math.max(0.5, lw);
@@ -237,9 +237,9 @@ function updateBorderLivePreview() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  LAYOUT COMPUTATION  (one layout per image type)
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * Returns layout for a single image entry:
@@ -263,9 +263,9 @@ function computeLayoutFor(img) {
   return { cols, rows, perPage: cols * rows, paper, dWmm, dHmm, margMM, gapMM };
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  CUT MARKS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function drawCutMarksCtx(ctx, x, y, w, h, SIZE, OFFSET) {
   ctx.save();
@@ -284,15 +284,15 @@ function drawCutMarksCtx(ctx, x, y, w, h, SIZE, OFFSET) {
   ctx.restore();
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  PREVIEW RENDERER
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 /**
  * Builds a flat "print queue": array of { dataURL, wMM, hMM }
  * cycling through images according to their individual copies count.
  *
- * If fillPage is ON → ignore copies; each image fills one full page.
+ * If fillPage is ON â†’ ignore copies; each image fills one full page.
  */
 function buildQueue() {
   const paper  = getPaperMM();
@@ -378,16 +378,16 @@ function renderPreview() {
   const pages = buildPages(queue);
 
   if (!pages.length) {
-    showToast('No se pueden colocar imágenes con la configuración actual', 'error');
+    showToast('No se pueden colocar imÃ¡genes con la configuraciÃ³n actual', 'error');
     return;
   }
 
   const totalSlots = pages.reduce((s, p) => s + p.items.length, 0);
   statsBar.classList.remove('hidden');
-  statPages.innerHTML = `<strong>${pages.length}</strong> página${pages.length!==1?'s':''}`;
+  statPages.innerHTML = `<strong>${pages.length}</strong> pÃ¡gina${pages.length!==1?'s':''}`;
   statSlots.innerHTML = `<strong>${totalSlots}</strong> cop. total`;
   statTotal.innerHTML = `<strong>${images.length}</strong> imagen${images.length!==1?'es':''}`;
-  statGrid.innerHTML  = pages.length ? `<strong>${pages[0].cols}×${pages[0].rows}</strong> (1ª pág)` : '';
+  statGrid.innerHTML  = pages.length ? `<strong>${pages[0].cols}Ã—${pages[0].rows}</strong> (1Âª pÃ¡g)` : '';
 
   pagesContainer.innerHTML = '';
   placeholder.classList.add('hidden');
@@ -409,7 +409,7 @@ function renderPreview() {
 
     const lbl = document.createElement('span');
     lbl.className = 'page-label';
-    lbl.textContent = `Página ${pgIdx+1} de ${pages.length} — ${items.length} elemento${items.length!==1?'s':''}`;
+    lbl.textContent = `PÃ¡gina ${pgIdx+1} de ${pages.length} â€” ${items.length} elemento${items.length!==1?'s':''}`;
     wrap.appendChild(lbl);
 
     const canvas = document.createElement('canvas');
@@ -448,12 +448,12 @@ function renderPreview() {
     });
   });
 
-  showToast(`Vista previa: ${pages.length} página${pages.length!==1?'s':''}`, 'success');
+  showToast(`Vista previa: ${pages.length} pÃ¡gina${pages.length!==1?'s':''}`, 'success');
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  PDF EXPORT
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function exportPDF() {
   if (!images.length) {
@@ -461,13 +461,13 @@ async function exportPDF() {
     return;
   }
 
-  setLoading(true, 'Preparando PDF…');
+  setLoading(true, 'Preparando PDFâ€¦');
   await new Promise(r => setTimeout(r, 50));
 
   try {
     const queue = buildQueue();
     const pages = buildPages(queue);
-    if (!pages.length) throw new Error('Sin páginas que generar');
+    if (!pages.length) throw new Error('Sin pÃ¡ginas que generar');
 
     const paper     = getPaperMM();
     const { jsPDF } = window.jspdf;
@@ -495,7 +495,7 @@ async function exportPDF() {
 
     for (let pgIdx = 0; pgIdx < pages.length; pgIdx++) {
       if (pgIdx > 0) doc.addPage();
-      loadingMsg.textContent = `Página ${pgIdx+1} de ${pages.length}…`;
+      loadingMsg.textContent = `PÃ¡gina ${pgIdx+1} de ${pages.length}â€¦`;
       await new Promise(r => setTimeout(r, 0));
 
       const { cols, rows, items, dWmm, dHmm, margMM, gapMM } = pages[pgIdx];
@@ -553,9 +553,9 @@ async function exportPDF() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  AUTO-PREVIEW TRIGGER
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 let _autoTimer = null;
 function triggerAutoPreview() {
@@ -563,9 +563,9 @@ function triggerAutoPreview() {
   _autoTimer = setTimeout(() => { if (images.length) renderPreview(); }, 300);
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  EVENT LISTENERS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 // File input
 imgInput.addEventListener('change', e => {
@@ -633,3 +633,16 @@ btnExport.addEventListener('click',  exportPDF);
 
 // Initial live preview
 updateBorderLivePreview();
+
+// ═══════════════════════════════════════════════════════════════════════
+//  TABS LOGIC
+// ═══════════════════════════════════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+    btn.classList.add('tab-active');
+    
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    document.getElementById(btn.dataset.target).style.display = 'grid';
+  });
+});

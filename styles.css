@@ -466,3 +466,34 @@ aside {
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #334155; border-radius: 999px; }
+
+/* ═══ TABS ═══ */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  background: rgba(30, 41, 59, 0.5);
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  width: fit-content;
+}
+.tab-btn {
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.tab-btn:hover {
+  color: #e2e8f0;
+}
+.tab-active {
+  background: #6366f1;
+  color: #fff !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
