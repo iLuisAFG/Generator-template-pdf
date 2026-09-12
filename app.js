@@ -27,6 +27,7 @@ const gap           = document.getElementById('gap');
 const copies        = document.getElementById('copies');
 const cutMarks      = document.getElementById('cutMarks');
 const fillPage      = document.getElementById('fillPage');
+const pdfFileName   = document.getElementById('pdfFileName');
 const btnPortrait   = document.getElementById('btnPortrait');
 const btnLandscape  = document.getElementById('btnLandscape');
 const btnPreview    = document.getElementById('btnPreview');
@@ -538,8 +539,9 @@ async function exportPDF() {
       });
     }
 
-    const label = { letter:'Carta', a4:'A4', tabloid:'Tabloide' }[paperSize.value];
-    const name  = `plantilla_${label}_${queue.length}cop.pdf`;
+    const baseName = pdfFileName.value.trim() || 'plantilla';
+    const name = baseName.endsWith('.pdf') ? baseName : `${baseName}.pdf`;
+    
     doc.save(name);
     setLoading(false);
     showToast(`PDF guardado: ${name}`, 'success');
