@@ -1,5 +1,5 @@
 ﻿// ═══════════════════════════════════════════════════════════════════════
-//  app.js  —  Generador de Plantillas de Impresión
+//  app.js  —  Generador de Plantillas de Impresión v2
 // ═══════════════════════════════════════════════════════════════════════
 
 /* ── Paper sizes in mm ── */
@@ -9,111 +9,253 @@ const PAPER_SIZES = {
   tabloid: { w: 279.4, h: 431.8 },
 };
 
-/* ── State ── */
-let imageDataURL = null;   // base64 data URL of loaded image
-let orientation  = 'portrait';
+/* ═══════════════════════════════════════════════════
+   STATE
+   images = [{ id, name, dataURL, wCm, hCm, copies }]
+═══════════════════════════════════════════════════ */
+let images      = [];   // array of image objects
+let orientation = 'portrait';
+let borderStyle = 'none';  // none | solid | dashed | dotted
 
 /* ── DOM refs ── */
-const imgInput        = document.getElementById('imgInput');
-const dropZone        = document.getElementById('dropZone');
-const imgPreview      = document.getElementById('imgPreview');
-const imgPreviewWrap  = document.getElementById('imgPreviewWrap');
-const imgClear        = document.getElementById('imgClear');
-const imgInfo         = document.getElementById('imgInfo');
-const designW         = document.getElementById('designW');
-const designH         = document.getElementById('designH');
-const paperSize       = document.getElementById('paperSize');
-const margin          = document.getElementById('margin');
-const gap             = document.getElementById('gap');
-const copies          = document.getElementById('copies');
-const cutMarks        = document.getElementById('cutMarks');
-const fillPage        = document.getElementById('fillPage');
-const btnPortrait     = document.getElementById('btnPortrait');
-const btnLandscape    = document.getElementById('btnLandscape');
-const btnPreview      = document.getElementById('btnPreview');
-const btnExport       = document.getElementById('btnExport');
-const placeholder     = document.getElementById('placeholder');
-const pagesContainer  = document.getElementById('pagesContainer');
-const statsBar        = document.getElementById('statsBar');
-const statPages       = document.getElementById('statPages');
-const statCopiesPerPage = document.getElementById('statCopiesPerPage');
-const statTotal       = document.getElementById('statTotal');
-const statGrid        = document.getElementById('statGrid');
-const loadingOverlay  = document.getElementById('loadingOverlay');
-const loadingMsg      = document.getElementById('loadingMsg');
-const toast           = document.getElementById('toast');
-const toastInner      = document.getElementById('toastInner');
-const toastIcon       = document.getElementById('toastIcon');
-const toastMsg        = document.getElementById('toastMsg');
+const imgInput      = document.getElementById('imgInput');
+const dropZone      = document.getElementById('dropZone');
+const imgList       = document.getElementById('imgList');
+const paperSize     = document.getElementById('paperSize');
+const margin        = document.getElementById('margin');
+const gap           = document.getElementById('gap');
+const copies        = document.getElementById('copies');
+const cutMarks      = document.getElementById('cutMarks');
+const fillPage      = document.getElementById('fillPage');
+const btnPortrait   = document.getElementById('btnPortrait');
+const btnLandscape  = document.getElementById('btnLandscape');
+const btnPreview    = document.getElementById('btnPreview');
+const btnExport     = document.getElementById('btnExport');
+const placeholder   = document.getElementById('placeholder');
+const pagesContainer= document.getElementById('pagesContainer');
+const statsBar      = document.getElementById('statsBar');
+const statPages     = document.getElementById('statPages');
+const statSlots     = document.getElementById('statSlots');
+const statTotal     = document.getElementById('statTotal');
+const statGrid      = document.getElementById('statGrid');
+const loadingOverlay= document.getElementById('loadingOverlay');
+const loadingMsg    = document.getElementById('loadingMsg');
+const toast         = document.getElementById('toast');
+const toastInner    = document.getElementById('toastInner');
+const toastIcon     = document.getElementById('toastIcon');
+const toastMsg      = document.getElementById('toastMsg');
+
+/* Border controls */
+const borderStylePicker = document.getElementById('borderStylePicker');
+const borderControls    = document.getElementById('borderControls');
+const borderWidth       = document.getElementById('borderWidth');
+const borderColor       = document.getElementById('borderColor');
+const borderColorHex    = document.getElementById('borderColorHex');
+const borderOpacity     = document.getElementById('borderOpacity');
+const borderLiveCanvas  = document.getElementById('borderLiveCanvas');
 
 // ═══════════════════════════════════════════════════════════════════════
 //  UTILS
 // ═══════════════════════════════════════════════════════════════════════
 
-/** Show toast notification */
 function showToast(msg, type = 'success') {
-  const colors = {
-    success: 'bg-green-800 text-green-100',
-    error:   'bg-red-800 text-red-100',
-    info:    'bg-indigo-800 text-indigo-100',
-  };
-  const icons = { success: '✓', error: '✕', info: 'ℹ' };
-  toastInner.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl text-sm font-medium ${colors[type]}`;
-  toastIcon.textContent = icons[type];
+  toastInner.className = 'toast-inner toast-' + type;
+  toastIcon.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
   toastMsg.textContent = msg;
   toast.classList.remove('hidden');
-  clearTimeout(toast._timer);
-  toast._timer = setTimeout(() => toast.classList.add('hidden'), 3500);
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toast.classList.add('hidden'), 3500);
 }
 
-/** Show/hide loading overlay */
 function setLoading(visible, msg = 'Generando PDF…') {
   loadingMsg.textContent = msg;
-  loadingOverlay.classList.toggle('hidden', !visible);
   loadingOverlay.style.display = visible ? 'flex' : 'none';
 }
 
-/** Get current paper dimensions in mm (respecting orientation) */
 function getPaperMM() {
   const base = PAPER_SIZES[paperSize.value];
-  if (orientation === 'landscape') return { w: base.h, h: base.w };
-  return { ...base };
+  return orientation === 'landscape' ? { w: base.h, h: base.w } : { ...base };
 }
 
-/** Convert mm → px at given DPI (default 96 dpi for screen) */
-const mm2px = (mm, dpi = 96) => (mm / 25.4) * dpi;
+/** Build a hex color string with opacity (returns rgba) */
+function hexToRGBA(hex, pct) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${pct/100})`;
+}
 
-/** Read form values */
-function getFormValues() {
+/** Generate unique id */
+let _uid = 0;
+const uid = () => ++_uid;
+
+// ═══════════════════════════════════════════════════════════════════════
+//  IMAGE MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════
+
+function addImageFile(file) {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith('image/')) {
+      showToast(`"${file.name}" no es PNG/JPG`, 'error');
+      return resolve();
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const dataURL = e.target.result;
+      const tmpImg  = new Image();
+      tmpImg.onload = () => {
+        // default: 5 cm for the longer side, keep aspect ratio
+        const nat = tmpImg.naturalWidth / tmpImg.naturalHeight;
+        let dw = 5, dh = 5;
+        if (nat >= 1) { dw = 5; dh = parseFloat((5 / nat).toFixed(2)); }
+        else          { dh = 5; dw = parseFloat((5 * nat).toFixed(2)); }
+
+        images.push({
+          id: uid(),
+          name: file.name,
+          dataURL,
+          wCm: dw,
+          hCm: dh,
+          copies: parseInt(copies.value) || 1,
+        });
+        renderImgList();
+        resolve();
+      };
+      tmpImg.src = dataURL;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function loadFiles(files) {
+  for (const f of Array.from(files)) await addImageFile(f);
+  showToast(`${files.length} imagen${files.length > 1 ? 'es' : ''} cargada${files.length > 1 ? 's' : ''}`, 'success');
+  triggerAutoPreview();
+}
+
+function removeImage(id) {
+  images = images.filter(img => img.id !== id);
+  renderImgList();
+  triggerAutoPreview();
+}
+
+function renderImgList() {
+  imgList.innerHTML = '';
+  images.forEach(img => {
+    const item = document.createElement('div');
+    item.className = 'img-item';
+    item.dataset.id = img.id;
+    item.innerHTML = `
+      <div class="img-item-header">
+        <img class="img-thumb" src="${img.dataURL}" alt="${img.name}" />
+        <span class="img-name" title="${img.name}">${img.name}</span>
+        <button class="img-delete" data-del="${img.id}" title="Eliminar">✕</button>
+      </div>
+      <div class="img-item-body">
+        <div>
+          <label class="lbl">Ancho (cm)</label>
+          <input class="input img-w" type="number" min="0.5" max="200" step="0.1" value="${img.wCm}" data-id="${img.id}" />
+        </div>
+        <div>
+          <label class="lbl">Alto (cm)</label>
+          <input class="input img-h" type="number" min="0.5" max="200" step="0.1" value="${img.hCm}" data-id="${img.id}" />
+        </div>
+        <div>
+          <label class="lbl">Copias</label>
+          <input class="input img-copies" type="number" min="1" max="9999" value="${img.copies}" data-id="${img.id}" />
+        </div>
+      </div>`;
+
+    // Delete button
+    item.querySelector('[data-del]').addEventListener('click', () => removeImage(img.id));
+
+    // W change
+    item.querySelector('.img-w').addEventListener('change', e => {
+      const obj = images.find(x => x.id === img.id);
+      if (obj) { obj.wCm = parseFloat(e.target.value) || 5; triggerAutoPreview(); }
+    });
+    // H change
+    item.querySelector('.img-h').addEventListener('change', e => {
+      const obj = images.find(x => x.id === img.id);
+      if (obj) { obj.hCm = parseFloat(e.target.value) || 5; triggerAutoPreview(); }
+    });
+    // Copies change
+    item.querySelector('.img-copies').addEventListener('change', e => {
+      const obj = images.find(x => x.id === img.id);
+      if (obj) { obj.copies = parseInt(e.target.value) || 1; triggerAutoPreview(); }
+    });
+
+    imgList.appendChild(item);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  BORDER CONTROLS
+// ═══════════════════════════════════════════════════════════════════════
+
+function getBorderOpts() {
   return {
-    dW:       parseFloat(designW.value)  || 5,   // cm
-    dH:       parseFloat(designH.value)  || 5,   // cm
-    marg:     parseFloat(margin.value)   || 0.5, // cm
-    gapVal:   parseFloat(gap.value)      || 0,   // cm
-    qty:      parseInt(copies.value)     || 1,
-    useCuts:  cutMarks.checked,
-    fillAll:  fillPage.checked,
+    style:   borderStyle,
+    width:   parseFloat(borderWidth.value)  || 1,
+    color:   borderColor.value              || '#000000',
+    opacity: parseFloat(borderOpacity.value)|| 100,
   };
 }
 
-/** Compute layout: how many cols/rows fit per page */
-function computeLayout() {
-  const paper = getPaperMM();       // mm
-  const { dW, dH, marg, gapVal } = getFormValues();
+/** Draw border on a canvas context (in canvas-px units) */
+function drawBorderCtx(ctx, x, y, w, h, b, SCALE) {
+  if (b.style === 'none') return;
+  const lw = b.width * SCALE * 0.35;  // pt → mm-ish → px
+  ctx.save();
+  ctx.strokeStyle = hexToRGBA(b.color, b.opacity);
+  ctx.lineWidth   = Math.max(0.5, lw);
+  if (b.style === 'dashed') ctx.setLineDash([lw * 3, lw * 2]);
+  else if (b.style === 'dotted') ctx.setLineDash([lw, lw * 2]);
+  else ctx.setLineDash([]);
+  ctx.strokeRect(x + lw/2, y + lw/2, w - lw, h - lw);
+  ctx.restore();
+}
 
-  // Convert everything to mm
-  const dWmm   = dW   * 10;
-  const dHmm   = dH   * 10;
-  const margMM = marg * 10;
-  const gapMM  = gapVal * 10;
+/** Set border line dash for jsPDF */
+function pdfSetLineDash(doc, style, widthMM) {
+  if (style === 'dashed') doc.setLineDashPattern([widthMM*2, widthMM*1.5], 0);
+  else if (style === 'dotted') doc.setLineDashPattern([widthMM*0.5, widthMM*1.5], 0);
+  else doc.setLineDashPattern([], 0);
+}
 
-  // Available space inside margins
+function updateBorderLivePreview() {
+  const b    = getBorderOpts();
+  const c    = borderLiveCanvas;
+  const ctx  = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, c.width, c.height);
+  if (b.style !== 'none') {
+    const pad = 4;
+    drawBorderCtx(ctx, pad, pad, c.width - pad*2, c.height - pad*2, b, 1);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  LAYOUT COMPUTATION  (one layout per image type)
+// ═══════════════════════════════════════════════════════════════════════
+
+/**
+ * Returns layout for a single image entry:
+ *   { cols, rows, perPage, dWmm, dHmm, margMM, gapMM }
+ */
+function computeLayoutFor(img) {
+  const paper  = getPaperMM();
+  const margMM = (parseFloat(margin.value) || 0.5) * 10;
+  const gapMM  = (parseFloat(gap.value)   || 0)   * 10;
+  const dWmm   = img.wCm * 10;
+  const dHmm   = img.hCm * 10;
+
   const areaW = paper.w - 2 * margMM;
   const areaH = paper.h - 2 * margMM;
 
   if (areaW <= 0 || areaH <= 0 || dWmm <= 0 || dHmm <= 0) return null;
 
-  // Number of items per row/col
   const cols = Math.max(1, Math.floor((areaW + gapMM) / (dWmm + gapMM)));
   const rows = Math.max(1, Math.floor((areaH + gapMM) / (dHmm + gapMM)));
 
@@ -121,29 +263,24 @@ function computeLayout() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-//  IMAGE LOADING
+//  CUT MARKS
 // ═══════════════════════════════════════════════════════════════════════
 
-function loadImage(file) {
-  if (!file || !file.type.startsWith('image/')) {
-    showToast('Solo se aceptan archivos PNG o JPG', 'error');
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = e => {
-    imageDataURL = e.target.result;
-    imgPreview.src = imageDataURL;
-    imgPreviewWrap.classList.remove('hidden');
-    // Get natural dimensions
-    const tmpImg = new Image();
-    tmpImg.onload = () => {
-      imgInfo.textContent = `${tmpImg.naturalWidth} × ${tmpImg.naturalHeight} px — ${(file.size / 1024).toFixed(1)} KB`;
-    };
-    tmpImg.src = imageDataURL;
-    showToast('Imagen cargada correctamente', 'success');
-    renderPreview();
-  };
-  reader.readAsDataURL(file);
+function drawCutMarksCtx(ctx, x, y, w, h, SIZE, OFFSET) {
+  ctx.save();
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth   = 0.5;
+  ctx.setLineDash([]);
+  const corners = [
+    [x, y, 1, 1], [x+w, y, -1, 1], [x, y+h, 1, -1], [x+w, y+h, -1, -1]
+  ];
+  corners.forEach(([cx, cy, dx, dy]) => {
+    ctx.beginPath();
+    ctx.moveTo(cx + dx*OFFSET, cy); ctx.lineTo(cx + dx*(OFFSET+SIZE), cy);
+    ctx.moveTo(cx, cy + dy*OFFSET); ctx.lineTo(cx, cy + dy*(OFFSET+SIZE));
+    ctx.stroke();
+  });
+  ctx.restore();
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -151,137 +288,166 @@ function loadImage(file) {
 // ═══════════════════════════════════════════════════════════════════════
 
 /**
- * Builds SVG cut-mark paths for a single cell
- * @param {number} x - x position in px (within page canvas)
- * @param {number} y - y position in px
- * @param {number} w - cell width px
- * @param {number} h - cell height px
- * @param {number} size - cut mark length px
- * @param {number} offset - gap between cell edge and mark start px
+ * Builds a flat "print queue": array of { dataURL, wMM, hMM }
+ * cycling through images according to their individual copies count.
+ *
+ * If fillPage is ON → ignore copies; each image fills one full page.
  */
-function cutMarkPath(x, y, w, h, size, offset) {
-  const lines = [];
-  const corners = [
-    [x, y, 1, 1],     // top-left
-    [x + w, y, -1, 1],    // top-right
-    [x, y + h, 1, -1],   // bottom-left
-    [x + w, y + h, -1, -1], // bottom-right
-  ];
-  corners.forEach(([cx, cy, dx, dy]) => {
-    // Horizontal arm
-    lines.push(`M ${cx + dx * offset} ${cy} L ${cx + dx * (offset + size)} ${cy}`);
-    // Vertical arm
-    lines.push(`M ${cx} ${cy + dy * offset} L ${cx} ${cy + dy * (offset + size)}`);
+function buildQueue() {
+  const paper  = getPaperMM();
+  const margMM = (parseFloat(margin.value) || 0.5) * 10;
+  const gapMM  = (parseFloat(gap.value)   || 0)   * 10;
+
+  if (fillPage.checked) {
+    // One "group" per image: exactly perPage slots
+    const queue = [];
+    images.forEach(img => {
+      const layout = computeLayoutFor(img);
+      if (!layout) return;
+      for (let i = 0; i < layout.perPage; i++) {
+        queue.push({ dataURL: img.dataURL, wMM: img.wCm*10, hMM: img.hCm*10 });
+      }
+    });
+    return queue;
+  }
+
+  // Normal mode: each image has its own copies count
+  const queue = [];
+  images.forEach(img => {
+    for (let i = 0; i < img.copies; i++) {
+      queue.push({ dataURL: img.dataURL, wMM: img.wCm*10, hMM: img.hCm*10 });
+    }
   });
-  return lines.join(' ');
+  return queue;
+}
+
+/**
+ * Groups queue items into pages.
+ * We use a greedy packing: current page has a "current image type".
+ * When a different image size is encountered, we start a new page.
+ * (This gives clean pages per image type.)
+ *
+ * Each page = { items: [...{dataURL,wMM,hMM}], cols, rows, perPage, paper, margMM, gapMM }
+ */
+function buildPages(queue) {
+  if (!queue.length) return [];
+
+  const paper  = getPaperMM();
+  const margMM = (parseFloat(margin.value) || 0.5) * 10;
+  const gapMM  = (parseFloat(gap.value)   || 0)   * 10;
+
+  const pages   = [];
+  let pageItems = [];
+  let curW = null, curH = null;
+  let curLayout = null;
+
+  function pushPage() {
+    if (!pageItems.length) return;
+    pages.push({ items: pageItems, ...curLayout });
+    pageItems = [];
+  }
+
+  for (const item of queue) {
+    const sizeChanged = (item.wMM !== curW || item.hMM !== curH);
+    if (sizeChanged) {
+      pushPage();
+      // compute layout for this image size
+      const dWmm = item.wMM, dHmm = item.hMM;
+      const areaW = paper.w - 2*margMM;
+      const areaH = paper.h - 2*margMM;
+      const cols = Math.max(1, Math.floor((areaW+gapMM)/(dWmm+gapMM)));
+      const rows = Math.max(1, Math.floor((areaH+gapMM)/(dHmm+gapMM)));
+      curLayout = { cols, rows, perPage: cols*rows, paper, dWmm, dHmm, margMM, gapMM };
+      curW = item.wMM; curH = item.hMM;
+    }
+    if (pageItems.length >= curLayout.perPage) pushPage();
+    pageItems.push(item);
+  }
+  pushPage();
+  return pages;
 }
 
 function renderPreview() {
-  if (!imageDataURL) {
-    showToast('Carga una imagen primero', 'info');
+  if (!images.length) {
+    showToast('Carga al menos una imagen', 'info');
     return;
   }
 
-  const layout = computeLayout();
-  if (!layout) {
-    showToast('Los márgenes son demasiado grandes para el papel', 'error');
+  const queue = buildQueue();
+  const pages = buildPages(queue);
+
+  if (!pages.length) {
+    showToast('No se pueden colocar imágenes con la configuración actual', 'error');
     return;
   }
 
-  const { cols, rows, perPage, paper, dWmm, dHmm, margMM, gapMM } = layout;
-  const { qty, useCuts, fillAll } = getFormValues();
-
-  const totalNeeded = fillAll ? perPage : qty;
-  const totalPages  = Math.ceil(totalNeeded / perPage);
-  let   remaining   = totalNeeded;
-
-  // Update stats bar
+  const totalSlots = pages.reduce((s, p) => s + p.items.length, 0);
   statsBar.classList.remove('hidden');
-  statPages.innerHTML       = `<strong>${totalPages}</strong> página${totalPages !== 1 ? 's' : ''}`;
-  statCopiesPerPage.innerHTML = `<strong>${perPage}</strong> copia${perPage !== 1 ? 's' : ''}/página`;
-  statTotal.innerHTML       = `<strong>${totalNeeded}</strong> total`;
-  statGrid.innerHTML        = `<strong>${cols} × ${rows}</strong> (col × fila)`;
+  statPages.innerHTML = `<strong>${pages.length}</strong> página${pages.length!==1?'s':''}`;
+  statSlots.innerHTML = `<strong>${totalSlots}</strong> cop. total`;
+  statTotal.innerHTML = `<strong>${images.length}</strong> imagen${images.length!==1?'es':''}`;
+  statGrid.innerHTML  = pages.length ? `<strong>${pages[0].cols}×${pages[0].rows}</strong> (1ª pág)` : '';
 
-  // Scale factor: render at ~2.5 px/mm for preview
-  const SCALE = 2.0; // px per mm  (lower = smaller preview)
-  const pageW  = paper.w * SCALE;
-  const pageH  = paper.h * SCALE;
-
-  // Cut mark config (in px)
-  const cutSize   = 4 * SCALE;
-  const cutOffset = 1 * SCALE;
-
-  // Clear container
   pagesContainer.innerHTML = '';
   placeholder.classList.add('hidden');
   pagesContainer.classList.remove('hidden');
 
-  for (let pg = 0; pg < totalPages; pg++) {
-    const onThisPage = Math.min(remaining, perPage);
-    remaining -= onThisPage;
+  const SCALE    = 2.0;
+  const useCuts  = cutMarks.checked;
+  const b        = getBorderOpts();
+  const cutSZ    = 4 * SCALE;
+  const cutOFF   = 1 * SCALE;
 
-    // Wrapper
+  pages.forEach((pg, pgIdx) => {
+    const { cols, rows, items, paper, dWmm, dHmm, margMM, gapMM } = pg;
+    const canW = Math.round(paper.w * SCALE);
+    const canH = Math.round(paper.h * SCALE);
+
     const wrap = document.createElement('div');
-    wrap.className = 'flex flex-col items-center gap-1';
+    wrap.className = 'page-wrap';
 
     const lbl = document.createElement('span');
-    lbl.className = 'page-label text-xs text-gray-500';
-    lbl.textContent = `Página ${pg + 1} de ${totalPages} — ${onThisPage} copia${onThisPage !== 1 ? 's' : ''}`;
+    lbl.className = 'page-label';
+    lbl.textContent = `Página ${pgIdx+1} de ${pages.length} — ${items.length} elemento${items.length!==1?'s':''}`;
     wrap.appendChild(lbl);
 
-    // Page canvas
     const canvas = document.createElement('canvas');
-    canvas.width  = Math.round(pageW);
-    canvas.height = Math.round(pageH);
-    canvas.className = 'page-preview';
-    canvas.style.maxWidth = '100%';
+    canvas.width  = canW;
+    canvas.height = canH;
+    canvas.className = 'page-canvas';
     wrap.appendChild(canvas);
     pagesContainer.appendChild(wrap);
 
-    // Draw the page
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canW, canH);
 
-    // Load image and draw
-    const img = new Image();
-    img.onload = () => {
-      let drawn = 0;
-      outer: for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          if (drawn >= onThisPage) break outer;
+    // Draw margin guide
+    ctx.strokeStyle = '#e5e7eb';
+    ctx.lineWidth   = 0.5;
+    ctx.strokeRect(margMM*SCALE, margMM*SCALE,
+      (paper.w - 2*margMM)*SCALE, (paper.h - 2*margMM)*SCALE);
 
-          const px = (margMM + c * (dWmm + gapMM)) * SCALE;
-          const py = (margMM + r * (dHmm + gapMM)) * SCALE;
-          const pw = dWmm * SCALE;
-          const ph = dHmm * SCALE;
+    // Draw items (may have different images if fillPage is off within same page)
+    items.forEach((item, idx) => {
+      const col = idx % cols;
+      const row = Math.floor(idx / cols);
+      const px  = (margMM + col*(dWmm+gapMM)) * SCALE;
+      const py  = (margMM + row*(dHmm+gapMM)) * SCALE;
+      const pw  = dWmm * SCALE;
+      const ph  = dHmm * SCALE;
 
-          ctx.drawImage(img, px, py, pw, ph);
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, px, py, pw, ph);
+        if (useCuts)  drawCutMarksCtx(ctx, px, py, pw, ph, cutSZ, cutOFF);
+        if (b.style !== 'none') drawBorderCtx(ctx, px, py, pw, ph, b, SCALE);
+      };
+      img.src = item.dataURL;
+    });
+  });
 
-          // Cut marks
-          if (useCuts) {
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth   = 0.5;
-            ctx.beginPath();
-            const path = new Path2D(cutMarkPath(px, py, pw, ph, cutSize, cutOffset));
-            ctx.stroke(path);
-          }
-
-          drawn++;
-        }
-      }
-
-      // Page border guide (light gray)
-      ctx.strokeStyle = '#e5e7eb';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(margMM * SCALE, margMM * SCALE,
-        (paper.w - 2 * margMM) * SCALE,
-        (paper.h - 2 * margMM) * SCALE);
-    };
-    img.src = imageDataURL;
-  }
-
-  showToast(`Vista previa generada: ${totalPages} página${totalPages !== 1 ? 's' : ''}`, 'success');
+  showToast(`Vista previa: ${pages.length} página${pages.length!==1?'s':''}`, 'success');
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -289,108 +455,110 @@ function renderPreview() {
 // ═══════════════════════════════════════════════════════════════════════
 
 async function exportPDF() {
-  if (!imageDataURL) {
-    showToast('Carga una imagen primero', 'error');
-    return;
-  }
-
-  const layout = computeLayout();
-  if (!layout) {
-    showToast('Configuración inválida', 'error');
+  if (!images.length) {
+    showToast('Carga al menos una imagen', 'error');
     return;
   }
 
   setLoading(true, 'Preparando PDF…');
-
-  // Defer to let UI update
   await new Promise(r => setTimeout(r, 50));
 
   try {
-    const { cols, rows, perPage, paper, dWmm, dHmm, margMM, gapMM } = layout;
-    const { qty, useCuts, fillAll } = getFormValues();
+    const queue = buildQueue();
+    const pages = buildPages(queue);
+    if (!pages.length) throw new Error('Sin páginas que generar');
 
-    const totalNeeded = fillAll ? perPage : qty;
-    const totalPages  = Math.ceil(totalNeeded / perPage);
-    let   remaining   = totalNeeded;
-
-    // jsPDF uses mm units
+    const paper     = getPaperMM();
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({
       orientation: orientation === 'portrait' ? 'p' : 'l',
       unit: 'mm',
-      format: paperSize.value === 'letter'  ? 'letter'  :
-              paperSize.value === 'tabloid' ? [paper.w, paper.h] :
-              'a4',
+      format: paperSize.value === 'letter'  ? 'letter' :
+              paperSize.value === 'tabloid' ? [paper.w, paper.h] : 'a4',
     });
 
-    // Pre-load image
-    const img = new Image();
-    await new Promise((resolve, reject) => {
-      img.onload  = resolve;
-      img.onerror = reject;
-      img.src = imageDataURL;
-    });
+    const b        = getBorderOpts();
+    const useCuts  = cutMarks.checked;
 
-    // Determine image format for jsPDF
-    const imgFmt = imageDataURL.startsWith('data:image/png') ? 'PNG' : 'JPEG';
-
-    for (let pg = 0; pg < totalPages; pg++) {
-      if (pg > 0) doc.addPage();
-
-      const onThisPage = Math.min(remaining, perPage);
-      remaining -= onThisPage;
-
-      loadingMsg.textContent = `Generando página ${pg + 1} de ${totalPages}…`;
-      // small yield
-      await new Promise(r => setTimeout(r, 0));
-
-      let drawn = 0;
-      outer: for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          if (drawn >= onThisPage) break outer;
-
-          const x = margMM + c * (dWmm + gapMM);
-          const y = margMM + r * (dHmm + gapMM);
-
-          doc.addImage(imageDataURL, imgFmt, x, y, dWmm, dHmm);
-
-          // Cut marks (drawn as line segments)
-          if (useCuts) {
-            const markLen  = 3;   // mm
-            const markGap  = 0.8; // mm  (distance from cell edge to mark start)
-            doc.setDrawColor(50, 50, 50);
-            doc.setLineWidth(0.15);
-
-            const corners = [
-              [x, y, 1, 1], [x + dWmm, y, -1, 1],
-              [x, y + dHmm, 1, -1], [x + dWmm, y + dHmm, -1, -1],
-            ];
-            corners.forEach(([cx, cy, dx, dy]) => {
-              // horizontal
-              doc.line(cx + dx * markGap, cy,
-                       cx + dx * (markGap + markLen), cy);
-              // vertical
-              doc.line(cx, cy + dy * markGap,
-                       cx, cy + dy * (markGap + markLen));
-            });
-          }
-
-          drawn++;
-        }
-      }
+    // Pre-load all unique images
+    const imgCache = {};
+    for (const img of images) {
+      if (imgCache[img.id]) continue;
+      await new Promise((res, rej) => {
+        const el = new Image();
+        el.onload  = () => { imgCache[img.id] = el; res(); };
+        el.onerror = rej;
+        el.src     = img.dataURL;
+      });
     }
 
-    const paperLabel = { letter: 'Carta', a4: 'A4', tabloid: 'Tabloide' }[paperSize.value];
-    const filename = `plantilla_${paperLabel}_${totalNeeded}copias.pdf`;
-    doc.save(filename);
+    for (let pgIdx = 0; pgIdx < pages.length; pgIdx++) {
+      if (pgIdx > 0) doc.addPage();
+      loadingMsg.textContent = `Página ${pgIdx+1} de ${pages.length}…`;
+      await new Promise(r => setTimeout(r, 0));
+
+      const { cols, rows, items, dWmm, dHmm, margMM, gapMM } = pages[pgIdx];
+
+      items.forEach((item, idx) => {
+        const col  = idx % cols;
+        const row  = Math.floor(idx / cols);
+        const x    = margMM + col*(dWmm+gapMM);
+        const y    = margMM + row*(dHmm+gapMM);
+        const fmt  = item.dataURL.startsWith('data:image/png') ? 'PNG' : 'JPEG';
+
+        doc.addImage(item.dataURL, fmt, x, y, dWmm, dHmm);
+
+        // Cut marks
+        if (useCuts) {
+          const mLen = 3, mGap = 0.8;
+          doc.setDrawColor(50,50,50);
+          doc.setLineWidth(0.15);
+          doc.setLineDashPattern([], 0);
+          [[x,y,1,1],[x+dWmm,y,-1,1],[x,y+dHmm,1,-1],[x+dWmm,y+dHmm,-1,-1]]
+            .forEach(([cx,cy,dx,dy]) => {
+              doc.line(cx+dx*mGap,cy, cx+dx*(mGap+mLen),cy);
+              doc.line(cx,cy+dy*mGap, cx,cy+dy*(mGap+mLen));
+            });
+        }
+
+        // Border
+        if (b.style !== 'none') {
+          const r   = parseInt(b.color.slice(1,3),16);
+          const g   = parseInt(b.color.slice(3,5),16);
+          const bv  = parseInt(b.color.slice(5,7),16);
+          const lw  = b.width * 0.352778; // pt to mm
+          doc.setDrawColor(r, g, bv);
+          doc.setLineWidth(lw);
+          doc.setGState(doc.GState({ opacity: b.opacity/100 }));
+          pdfSetLineDash(doc, b.style, lw);
+          doc.rect(x + lw/2, y + lw/2, dWmm - lw, dHmm - lw, 'S');
+          doc.setGState(doc.GState({ opacity: 1 }));
+          doc.setLineDashPattern([], 0);
+        }
+      });
+    }
+
+    const label = { letter:'Carta', a4:'A4', tabloid:'Tabloide' }[paperSize.value];
+    const name  = `plantilla_${label}_${queue.length}cop.pdf`;
+    doc.save(name);
     setLoading(false);
-    showToast(`PDF guardado: ${filename}`, 'success');
+    showToast(`PDF guardado: ${name}`, 'success');
 
   } catch (err) {
     console.error(err);
     setLoading(false);
-    showToast(`Error al generar PDF: ${err.message}`, 'error');
+    showToast('Error al generar PDF: ' + err.message, 'error');
   }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  AUTO-PREVIEW TRIGGER
+// ═══════════════════════════════════════════════════════════════════════
+
+let _autoTimer = null;
+function triggerAutoPreview() {
+  clearTimeout(_autoTimer);
+  _autoTimer = setTimeout(() => { if (images.length) renderPreview(); }, 300);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -399,51 +567,61 @@ async function exportPDF() {
 
 // File input
 imgInput.addEventListener('change', e => {
-  if (e.target.files[0]) loadImage(e.target.files[0]);
+  if (e.target.files.length) loadFiles(e.target.files);
+  e.target.value = '';
 });
 
 // Drop zone
-dropZone.addEventListener('dragover', e => {
-  e.preventDefault();
-  dropZone.classList.add('drag-over');
-});
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
   e.preventDefault();
   dropZone.classList.remove('drag-over');
-  if (e.dataTransfer.files[0]) loadImage(e.dataTransfer.files[0]);
-});
-
-// Clear image
-imgClear.addEventListener('click', e => {
-  e.preventDefault();
-  imageDataURL = null;
-  imgPreview.src = '';
-  imgPreviewWrap.classList.add('hidden');
-  imgInput.value = '';
-  pagesContainer.classList.add('hidden');
-  placeholder.classList.remove('hidden');
-  statsBar.classList.add('hidden');
+  if (e.dataTransfer.files.length) loadFiles(e.dataTransfer.files);
 });
 
 // Orientation buttons
 [btnPortrait, btnLandscape].forEach(btn => {
   btn.addEventListener('click', () => {
     orientation = btn.dataset.orient;
-    btnPortrait.classList.toggle('orient-active', orientation === 'portrait');
+    btnPortrait.classList.toggle('orient-active',  orientation === 'portrait');
     btnLandscape.classList.toggle('orient-active', orientation === 'landscape');
+    triggerAutoPreview();
   });
 });
 
-// Auto-preview on input change
-const autoPreviewInputs = [designW, designH, paperSize, margin, gap, copies, cutMarks, fillPage];
-autoPreviewInputs.forEach(el => {
-  el.addEventListener('change', () => { if (imageDataURL) renderPreview(); });
-});
-[btnPortrait, btnLandscape].forEach(btn => {
-  btn.addEventListener('click', () => { if (imageDataURL) renderPreview(); });
+// Paper / margin / gap / global options
+[paperSize, margin, gap, copies, cutMarks, fillPage].forEach(el => {
+  el.addEventListener('change', triggerAutoPreview);
 });
 
-// Manual buttons
+// Border style picker
+borderStylePicker.querySelectorAll('.bs-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    borderStylePicker.querySelectorAll('.bs-btn').forEach(b => b.classList.remove('bs-active'));
+    btn.classList.add('bs-active');
+    borderStyle = btn.dataset.style;
+    const show = borderStyle !== 'none';
+    borderControls.style.display = show ? '' : 'none';
+    updateBorderLivePreview();
+    triggerAutoPreview();
+  });
+});
+
+// Border width / color / opacity
+[borderWidth, borderOpacity].forEach(el => {
+  el.addEventListener('input',  () => { updateBorderLivePreview(); triggerAutoPreview(); });
+  el.addEventListener('change', () => { updateBorderLivePreview(); triggerAutoPreview(); });
+});
+borderColor.addEventListener('input', () => {
+  borderColorHex.textContent = borderColor.value;
+  updateBorderLivePreview();
+  triggerAutoPreview();
+});
+
+// Buttons
 btnPreview.addEventListener('click', renderPreview);
-btnExport.addEventListener('click', exportPDF);
+btnExport.addEventListener('click',  exportPDF);
+
+// Initial live preview
+updateBorderLivePreview();
