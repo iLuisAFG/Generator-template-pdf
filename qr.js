@@ -1,6 +1,6 @@
-// ═══════════════════════════════════════════════════════════════════════
-//  qr.js  —  Generador de Códigos QR Avanzado
-// ═══════════════════════════════════════════════════════════════════════
+﻿// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  qr.js  â€”  Generador de CÃ³digos QR Avanzado
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const qrData = document.getElementById('qrData');
 const qrDotsType = document.getElementById('qrDotsType');
@@ -140,3 +140,23 @@ btnDownloadQRSvg.addEventListener('click', () => {
 
 // Initial render
 updateQR();
+// Send to merge tab
+const btnSendToMerge = document.getElementById('btnSendToMerge');
+if (btnSendToMerge) {
+  btnSendToMerge.addEventListener('click', () => {
+    qrCode.getRawData('png').then(blob => {
+      const url = URL.createObjectURL(blob);
+      if (window.loadQrIntoMerge) {
+        window.loadQrIntoMerge(url);
+      } else {
+        // En caso de que merge.js an no haya cargado
+        window.pendingQrUrl = url;
+      }
+      const mergeTabBtn = document.querySelector('.tab-btn[data-target="tab-merge"]');
+      if (mergeTabBtn) mergeTabBtn.click();
+    }).catch(err => {
+      console.error(err);
+      if(window.showToast) window.showToast('Error generando QR', 'error');
+    });
+  });
+}
