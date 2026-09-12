@@ -1,22 +1,22 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador de Plantillas de ImpresiÃ³n</title>
+  <title>Generador de Plantillas de Impresión</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• HEADER â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ HEADER ═══════════ -->
 <header>
   <div class="header-inner">
     <svg width="28" height="28" fill="none" stroke="#818cf8" stroke-width="2" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
     </svg>
     <div>
-      <h1>Generador de Plantillas de ImpresiÃ³n</h1>
-      <p class="subtitle">Distribuye imÃ¡genes y exporta a PDF listo para imprimir</p>
+      <h1>Generador de Plantillas de Impresión</h1>
+      <p class="subtitle">Distribuye imágenes y exporta a PDF listo para imprimir</p>
     </div>
     <nav class="tabs">
       <button class="tab-btn tab-active" data-target="tab-pdf">Plantillas PDF</button>
@@ -25,17 +25,17 @@
   </div>
 </header>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• MAIN LAYOUT â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ MAIN LAYOUT ═══════════ -->
 <main id="tab-pdf" class="tab-content tab-active">
 
-  <!-- â•â•â• SIDEBAR â•â•â• -->
+  <!-- ═══ SIDEBAR ═══ -->
   <aside>
 
-    <!-- â”€â”€ ImÃ¡genes â”€â”€ -->
+    <!-- ── Imágenes ── -->
     <section class="card">
       <h2 class="section-title">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-        ImÃ¡genes de diseÃ±o
+        Imágenes de diseño
       </h2>
 
       <!-- Drop zone -->
@@ -49,25 +49,25 @@
       <div id="imgList" class="img-list"></div>
     </section>
 
-    <!-- â”€â”€ Papel y mÃ¡rgenes â”€â”€ -->
+    <!-- ── Papel y márgenes ── -->
     <section class="card">
       <h2 class="section-title">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        Papel y mÃ¡rgenes
+        Papel y márgenes
       </h2>
       <div>
-        <label class="lbl">TamaÃ±o de papel</label>
+        <label class="lbl">Tamaño de papel</label>
         <select id="paperSize" class="input">
-          <option value="letter">Carta (21.59 Ã— 27.94 cm)</option>
-          <option value="a4" selected>A4 (21 Ã— 29.7 cm)</option>
-          <option value="tabloid">Tabloide (27.94 Ã— 43.18 cm)</option>
+          <option value="letter">Carta (21.59 × 27.94 cm)</option>
+          <option value="a4" selected>A4 (21 × 29.7 cm)</option>
+          <option value="tabloid">Tabloide (27.94 × 43.18 cm)</option>
         </select>
       </div>
       <div>
-        <label class="lbl">OrientaciÃ³n</label>
+        <label class="lbl">Orientación</label>
         <div class="row-2">
-          <button id="btnPortrait"  class="orient-btn orient-active" data-orient="portrait">â–¯ Vertical</button>
-          <button id="btnLandscape" class="orient-btn"               data-orient="landscape">â–­ Horizontal</button>
+          <button id="btnPortrait"  class="orient-btn orient-active" data-orient="portrait">▯ Vertical</button>
+          <button id="btnLandscape" class="orient-btn"               data-orient="landscape">▭ Horizontal</button>
         </div>
       </div>
       <div class="row-2">
@@ -76,43 +76,43 @@
           <input id="margin" type="number" min="0" max="5" step="0.05" value="0.5" class="input" />
         </div>
         <div>
-          <label class="lbl">SeparaciÃ³n (cm)</label>
+          <label class="lbl">Separación (cm)</label>
           <input id="gap" type="number" min="0" max="5" step="0.05" value="0.3" class="input" />
         </div>
       </div>
     </section>
 
-    <!-- â”€â”€ Borde â”€â”€ -->
+    <!-- ── Borde ── -->
     <section class="card">
       <h2 class="section-title">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         Borde de imagen
       </h2>
 
-      <!-- Border style picker (Google Docs style) -->
+      <!-- Border style picker -->
       <div>
-        <label class="lbl">Estilo de lÃ­nea</label>
+        <label class="lbl">Estilo de línea</label>
         <div class="border-style-row" id="borderStylePicker">
           <button class="bs-btn bs-active" data-style="none" title="Sin borde">
             <span class="bs-preview bs-none"></span>
             <span class="bs-label">Ninguno</span>
           </button>
-          <button class="bs-btn" data-style="solid" title="LÃ­nea sÃ³lida">
+          <button class="bs-btn" data-style="solid" title="Línea sólida">
             <span class="bs-preview bs-solid"></span>
-            <span class="bs-label">SÃ³lido</span>
+            <span class="bs-label">Sólido</span>
           </button>
-          <button class="bs-btn" data-style="dashed" title="LÃ­nea discontinua">
+          <button class="bs-btn" data-style="dashed" title="Línea discontinua">
             <span class="bs-preview bs-dashed"></span>
             <span class="bs-label">Guiones</span>
           </button>
-          <button class="bs-btn" data-style="dotted" title="LÃ­nea punteada">
+          <button class="bs-btn" data-style="dotted" title="Línea punteada">
             <span class="bs-preview bs-dotted"></span>
             <span class="bs-label">Puntos</span>
           </button>
         </div>
       </div>
 
-      <!-- Border controls (hidden when none) -->
+      <!-- Border controls -->
       <div id="borderControls" class="hidden" style="display:none">
         <div class="row-3" style="gap:.5rem">
           <div style="flex:1.4">
@@ -126,20 +126,18 @@
               <span id="borderColorHex" class="color-hex">#000000</span>
             </div>
           </div>
-          <!-- Opacity -->
           <div style="flex:1">
             <label class="lbl">Opacidad</label>
             <input id="borderOpacity" type="number" min="0" max="100" step="5" value="100" class="input" />
           </div>
         </div>
-        <!-- Live preview line -->
         <div class="border-live-preview">
           <canvas id="borderLiveCanvas" width="260" height="36"></canvas>
         </div>
       </div>
     </section>
 
-    <!-- â”€â”€ Copias y opciones â”€â”€ -->
+    <!-- ── Copias y opciones ── -->
     <section class="card">
       <h2 class="section-title">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
@@ -163,7 +161,7 @@
           <span class="toggle-track"></span>
           <span class="toggle-thumb"></span>
         </div>
-        <span>Rellenar pÃ¡gina completa (ignorar cantidad)</span>
+        <span>Rellenar página completa (ignorar cantidad)</span>
       </label>
 
       <div style="margin-top: 0.5rem; border-top: 1px solid #1e293b; padding-top: 0.85rem;">
@@ -175,7 +173,7 @@
       </div>
     </section>
 
-    <!-- â”€â”€ Botones â”€â”€ -->
+    <!-- ── Botones ── -->
     <div class="action-row">
       <button id="btnPreview" class="btn-secondary">
         <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -189,7 +187,7 @@
 
   </aside>
 
-  <!-- â•â•â• PREVIEW â•â•â• -->
+  <!-- ═══ PREVIEW ═══ -->
   <section class="preview-section">
     <div id="statsBar" class="stats-bar hidden">
       <span id="statPages" class="stat-item"></span>
@@ -200,16 +198,16 @@
     <div id="previewArea" class="preview-area">
       <div id="placeholder" class="placeholder">
         <svg width="56" height="56" fill="none" stroke="#374151" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-        <p>Carga una imagen y configura las opciones<br>para ver la vista previa aquÃ­.</p>
+        <p>Carga una imagen y configura las opciones<br>para ver la vista previa aquí.</p>
       </div>
       <div id="pagesContainer" class="pages-container hidden"></div>
     </div>
   </section>
 
+</main>
+
 
 <!-- ═══════════ TAB QR ═══════════ -->
-
-</main>
 <main id="tab-qr" class="tab-content" style="display:none">
   <aside>
     <section class="card">
@@ -306,6 +304,16 @@
           <input id="qrMargin" type="number" value="10" min="0" max="100" class="input" />
         </div>
       </div>
+      
+      <label class="toggle-row" style="margin-top: 0.5rem;">
+        <div class="toggle-wrap">
+          <input id="qrTransparent" type="checkbox" />
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </div>
+        <span>Fondo transparente</span>
+      </label>
+      
     </section>
 
     <div class="action-row">
@@ -316,13 +324,15 @@
 
   <section class="preview-section">
     <div class="preview-area" style="justify-content:center; align-items:center;">
-      <div id="qrCanvas" style="background:#fff; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.4); overflow:hidden"></div>
+      <div id="qrCanvasWrap" style="background: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\"><rect width=\"10\" height=\"10\" fill=\"%23ccc\"/><rect x=\"10\" y=\"10\" width=\"10\" height=\"10\" fill=\"%23ccc\"/></svg>') repeat; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.4); overflow:hidden">
+        <div id="qrCanvas"></div>
+      </div>
     </div>
   </section>
 </main>
 
 
-<!-- â•â•â• TOAST â•â•â• -->
+<!-- ═══ TOAST ═══ -->
 <div id="toast" class="toast hidden">
   <div id="toastInner" class="toast-inner">
     <span id="toastIcon"></span>
@@ -330,11 +340,11 @@
   </div>
 </div>
 
-<!-- â•â•â• LOADING â•â•â• -->
+<!-- ═══ LOADING ═══ -->
 <div id="loadingOverlay" class="loading-overlay" style="display:none">
   <div class="loading-box">
     <div class="spinner"></div>
-    <p id="loadingMsg">Generando PDFâ€¦</p>
+    <p id="loadingMsg">Generando PDF…</p>
   </div>
 </div>
 
@@ -344,7 +354,3 @@
 <script src="qr.js" type="module"></script>
 </body>
 </html>
-
-
-
-

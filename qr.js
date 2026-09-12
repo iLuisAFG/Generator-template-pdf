@@ -1,4 +1,4 @@
-﻿// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════
 //  qr.js  —  Generador de Códigos QR Avanzado
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -13,6 +13,7 @@ const qrCornerDotColor = document.getElementById('qrCornerDotColor');
 const qrBgColor = document.getElementById('qrBgColor');
 const qrBgColorHex = document.getElementById('qrBgColorHex');
 const qrMargin = document.getElementById('qrMargin');
+const qrTransparent = document.getElementById('qrTransparent');
 const qrLogoInput = document.getElementById('qrLogoInput');
 const qrLogoDrop = document.getElementById('qrLogoDrop');
 const qrLogoPreviewWrap = document.getElementById('qrLogoPreviewWrap');
@@ -64,7 +65,7 @@ function updateQR() {
       color: qrDotsColor.value
     },
     backgroundOptions: {
-      color: qrBgColor.value
+      color: qrTransparent.checked ? "transparent" : qrBgColor.value
     },
     cornersSquareOptions: {
       type: qrCornerSquareType.value,
@@ -83,7 +84,7 @@ function updateQR() {
 const inputs = [
   qrData, qrDotsType, qrDotsColor, qrCornerSquareType, 
   qrCornerSquareColor, qrCornerDotType, qrCornerDotColor, 
-  qrBgColor, qrMargin
+  qrBgColor, qrMargin, qrTransparent
 ];
 
 inputs.forEach(el => {
