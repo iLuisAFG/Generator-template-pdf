@@ -1,22 +1,22 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador de Plantillas de Impresión</title>
+  <title>Generador de Plantillas de ImpresiÃ³n</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- ═══════════ HEADER ═══════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â• HEADER â•â•â•â•â•â•â•â•â•â•â• -->
 <header>
   <div class="header-inner">
     <svg width="28" height="28" fill="none" stroke="#818cf8" stroke-width="2" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
     </svg>
     <div>
-      <h1>Generador de Plantillas de Impresión</h1>
-      <p class="subtitle">Distribuye imágenes y exporta a PDF listo para imprimir</p>
+      <h1>Generador de Plantillas de ImpresiÃ³n</h1>
+      <p class="subtitle">Distribuye imÃ¡genes y exporta a PDF listo para imprimir</p>
     </div>
     <nav class="tabs">
       <button class="tab-btn tab-active" data-target="tab-pdf">Plantillas PDF</button>
@@ -26,44 +26,44 @@
   </div>
 </header>
 
-<!-- ═══════════ MAIN LAYOUT ═══════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â• MAIN LAYOUT â•â•â•â•â•â•â•â•â•â•â• -->
 <main id="tab-pdf" class="tab-content tab-active">
-  <!-- ═══ SIDEBAR ═══ -->
+  <!-- â•â•â• SIDEBAR â•â•â• -->
   <aside>
-    <!-- ── Imágenes ── -->
+    <!-- â”€â”€ ImÃ¡genes â”€â”€ -->
     <section class="card">
       <h2 class="section-title">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-        Imágenes de diseño
+        ImÃ¡genes de diseÃ±o
       </h2>
       <!-- Drop zone -->
       <label id="dropZone" class="drop-zone">
         <svg width="36" height="36" fill="none" stroke="#6b7280" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
         <span class="drop-text">Arrastra o <span class="accent">selecciona</span> PNG/JPG<br><small style="color:#6b7280">(puedes elegir varias a la vez)</small></span>
-        <input id="imgInput" type="file" accept="image/png,image/jpeg" multiple style="display:none" />
+        <input id="imgInput" type="file" accept="image/*" multiple style="display:none" />
       </label>
       <div id="imgList" class="img-list"></div>
     </section>
 
-    <!-- ── Papel y márgenes ── -->
+    <!-- â”€â”€ Papel y mÃ¡rgenes â”€â”€ -->
     <section class="card">
       <h2 class="section-title">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        Papel y márgenes
+        Papel y mÃ¡rgenes
       </h2>
       <div>
-        <label class="lbl">Tamaño de papel</label>
+        <label class="lbl">TamaÃ±o de papel</label>
         <select id="paperSize" class="input">
-          <option value="letter">Carta (21.59 × 27.94 cm)</option>
-          <option value="a4" selected>A4 (21 × 29.7 cm)</option>
-          <option value="tabloid">Tabloide (27.94 × 43.18 cm)</option>
+          <option value="letter">Carta (21.59 Ã— 27.94 cm)</option>
+          <option value="a4" selected>A4 (21 Ã— 29.7 cm)</option>
+          <option value="tabloid">Tabloide (27.94 Ã— 43.18 cm)</option>
         </select>
       </div>
       <div>
-        <label class="lbl">Orientación</label>
+        <label class="lbl">OrientaciÃ³n</label>
         <div class="row-2">
-          <button id="btnPortrait"  class="orient-btn orient-active" data-orient="portrait">▯ Vertical</button>
-          <button id="btnLandscape" class="orient-btn"               data-orient="landscape">▭ Horizontal</button>
+          <button id="btnPortrait"  class="orient-btn orient-active" data-orient="portrait">â–¯ Vertical</button>
+          <button id="btnLandscape" class="orient-btn"               data-orient="landscape">â–­ Horizontal</button>
         </div>
       </div>
       <div class="row-2">
@@ -72,25 +72,25 @@
           <input id="margin" type="number" min="0" max="5" step="0.05" value="0.5" class="input" />
         </div>
         <div>
-          <label class="lbl">Separación (cm)</label>
+          <label class="lbl">SeparaciÃ³n (cm)</label>
           <input id="gap" type="number" min="0" max="5" step="0.05" value="0.3" class="input" />
         </div>
       </div>
     </section>
 
-    <!-- ── Borde ── -->
+    <!-- â”€â”€ Borde â”€â”€ -->
     <section class="card">
       <h2 class="section-title">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         Borde de imagen
       </h2>
       <div>
-        <label class="lbl">Estilo de línea</label>
+        <label class="lbl">Estilo de lÃ­nea</label>
         <div class="border-style-row" id="borderStylePicker">
           <button class="bs-btn bs-active" data-style="none" title="Sin borde"><span class="bs-preview bs-none"></span><span class="bs-label">Ninguno</span></button>
-          <button class="bs-btn" data-style="solid" title="Línea sólida"><span class="bs-preview bs-solid"></span><span class="bs-label">Sólido</span></button>
-          <button class="bs-btn" data-style="dashed" title="Línea discontinua"><span class="bs-preview bs-dashed"></span><span class="bs-label">Guiones</span></button>
-          <button class="bs-btn" data-style="dotted" title="Línea punteada"><span class="bs-preview bs-dotted"></span><span class="bs-label">Puntos</span></button>
+          <button class="bs-btn" data-style="solid" title="LÃ­nea sÃ³lida"><span class="bs-preview bs-solid"></span><span class="bs-label">SÃ³lido</span></button>
+          <button class="bs-btn" data-style="dashed" title="LÃ­nea discontinua"><span class="bs-preview bs-dashed"></span><span class="bs-label">Guiones</span></button>
+          <button class="bs-btn" data-style="dotted" title="LÃ­nea punteada"><span class="bs-preview bs-dotted"></span><span class="bs-label">Puntos</span></button>
         </div>
       </div>
       <div id="borderControls" class="hidden" style="display:none">
@@ -103,7 +103,7 @@
       </div>
     </section>
 
-    <!-- ── Copias y opciones ── -->
+    <!-- â”€â”€ Copias y opciones â”€â”€ -->
     <section class="card">
       <h2 class="section-title">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
@@ -111,34 +111,34 @@
       </h2>
       <div><label class="lbl">Cantidad total de copias</label><input id="copies" type="number" min="1" max="9999" value="10" class="input" /></div>
       <label class="toggle-row"><div class="toggle-wrap"><input id="cutMarks" type="checkbox" checked /><span class="toggle-track"></span><span class="toggle-thumb"></span></div><span>Marcas de corte</span></label>
-      <label class="toggle-row"><div class="toggle-wrap"><input id="fillPage" type="checkbox" /><span class="toggle-track"></span><span class="toggle-thumb"></span></div><span>Rellenar página completa</span></label>
+      <label class="toggle-row"><div class="toggle-wrap"><input id="fillPage" type="checkbox" /><span class="toggle-track"></span><span class="toggle-thumb"></span></div><span>Rellenar pÃ¡gina completa</span></label>
       <div style="margin-top: 0.5rem; border-top: 1px solid #1e293b; padding-top: 0.85rem;">
         <label class="lbl">Nombre del archivo</label>
         <div style="display: flex; align-items: center; gap: 0.5rem;"><input id="pdfFileName" type="text" value="plantilla_impresion" class="input" style="flex: 1;" placeholder="Ej. mis_etiquetas" /><span style="color: #64748b; font-size: 0.8rem;">.pdf</span></div>
       </div>
     </section>
 
-    <!-- ── Marca de agua ── -->
+    <!-- â”€â”€ Marca de agua â”€â”€ -->
     <section class="card">
       <h2 class="section-title">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
         Marca de agua
       </h2>
       <label class="drop-zone" style="min-height:70px">
-        <span class="drop-text">Añadir marca de agua <span class="accent">PNG/JPG</span></span>
-        <input id="watermarkInput" type="file" accept="image/png,image/jpeg" style="display:none" />
+        <span class="drop-text">AÃ±adir marca de agua <span class="accent">PNG/JPG</span></span>
+        <input id="watermarkInput" type="file" accept="image/*" style="display:none" />
       </label>
       <div id="watermarksList" class="img-list" style="margin-top:0.5rem"></div>
     </section>
 
-    <!-- ── Botones ── -->
+    <!-- â”€â”€ Botones â”€â”€ -->
     <div class="action-row">
       <button id="btnPreview" class="btn-secondary">Vista previa</button>
       <button id="btnExport" class="btn-primary">Exportar PDF</button>
     </div>
   </aside>
 
-  <!-- ═══ PREVIEW ═══ -->
+  <!-- â•â•â• PREVIEW â•â•â• -->
   <section class="preview-section">
     <div id="statsBar" class="stats-bar hidden">
       <span id="statPages" class="stat-item"></span>
@@ -149,7 +149,7 @@
     <div id="previewArea" class="preview-area">
       <div id="placeholder" class="placeholder">
         <svg width="56" height="56" fill="none" stroke="#374151" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-        <p>Carga una imagen y configura las opciones<br>para ver la vista previa aquí.</p>
+        <p>Carga una imagen y configura las opciones<br>para ver la vista previa aquÃ­.</p>
       </div>
       <div id="pagesContainer" class="pages-container hidden"></div>
     </div>
@@ -157,7 +157,7 @@
 </main>
 
 
-<!-- ═══════════ TAB QR ═══════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â• TAB QR â•â•â•â•â•â•â•â•â•â•â• -->
 <main id="tab-qr" class="tab-content" style="display:none">
   <aside>
     <section class="card">
@@ -166,11 +166,11 @@
     </section>
 
     <section class="card">
-      <h2 class="section-title">Diseño de Puntos</h2>
+      <h2 class="section-title">DiseÃ±o de Puntos</h2>
       <div class="row-2">
         <div>
           <label class="lbl">Forma</label>
-          <select id="qrDotsType" class="input"><option value="square">Cuadrado</option><option value="dots">Puntos</option><option value="rounded">Redondeado</option><option value="extra-rounded" selected>Extra redondeado</option><option value="classy">Clásico</option><option value="classy-rounded">Clásico redondeado</option></select>
+          <select id="qrDotsType" class="input"><option value="square">Cuadrado</option><option value="dots">Puntos</option><option value="rounded">Redondeado</option><option value="extra-rounded" selected>Extra redondeado</option><option value="classy">ClÃ¡sico</option><option value="classy-rounded">ClÃ¡sico redondeado</option></select>
         </div>
         <div>
           <label class="lbl">Color</label>
@@ -194,7 +194,7 @@
     <section class="card">
       <h2 class="section-title">Logo Central</h2>
       <label id="qrLogoDrop" class="drop-zone" style="min-height:70px"><span class="drop-text">Sube un logo <span class="accent">PNG/JPG</span></span><input id="qrLogoInput" type="file" accept="image/png,image/jpeg,image/svg+xml" style="display:none" /></label>
-      <div id="qrLogoPreviewWrap" class="hidden" style="margin-top:0.5rem; display:flex; align-items:center; gap:0.5rem"><img id="qrLogoPreview" style="height:30px; border-radius:4px" /><button id="qrLogoClear" class="img-delete">✕ Quitar logo</button></div>
+      <div id="qrLogoPreviewWrap" class="hidden" style="margin-top:0.5rem; display:flex; align-items:center; gap:0.5rem"><img id="qrLogoPreview" style="height:30px; border-radius:4px" /><button id="qrLogoClear" class="img-delete">âœ• Quitar logo</button></div>
     </section>
 
     <section class="card">
@@ -210,7 +210,7 @@
       <button id="btnDownloadQRPng" class="btn-secondary">Descargar PNG</button>
       <button id="btnDownloadQRSvg" class="btn-secondary">Descargar SVG</button>
     </div>
-    <button id="btnSendToMerge" class="btn-primary" style="margin-top:0.5rem; width:100%; background:#10b981; border:none;">Unir a Plantilla ➜</button>
+    <button id="btnSendToMerge" class="btn-primary" style="margin-top:0.5rem; width:100%; background:#10b981; border:none;">Unir a Plantilla âžœ</button>
   </aside>
 
   <section class="preview-section">
@@ -223,25 +223,25 @@
 </main>
 
 
-<!-- ═══════════ TAB MERGE ═══════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â• TAB MERGE â•â•â•â•â•â•â•â•â•â•â• -->
 <main id="tab-merge" class="tab-content" style="display:none">
   <aside>
     <section class="card">
       <h2 class="section-title">1. Plantilla Base</h2>
       <label id="mergeTemplateDrop" class="drop-zone" style="min-height:90px">
         <span class="drop-text">Sube tu plantilla <span class="accent">PNG/JPG</span></span>
-        <input id="mergeTemplateInput" type="file" accept="image/png,image/jpeg" style="display:none" />
+        <input id="mergeTemplateInput" type="file" accept="image/*" style="display:none" />
       </label>
     </section>
 
     <section class="card">
-      <h2 class="section-title">2. Tamaño de exportación</h2>
+      <h2 class="section-title">2. TamaÃ±o de exportaciÃ³n</h2>
       <div class="row-2">
         <div>
           <label class="lbl">Unidad</label>
           <select id="mergeUnit" class="input">
-            <option value="px">Píxeles</option>
-            <option value="cm">Centímetros</option>
+            <option value="px">PÃ­xeles</option>
+            <option value="cm">CentÃ­metros</option>
           </select>
         </div>
         <div>
@@ -250,7 +250,7 @@
         </div>
       </div>
       <div style="margin-top:0.5rem; font-size:0.75rem; color:#94a3b8">
-        Alto calculado automáticamente: <strong id="mergeHeightDisplay" style="color:#e2e8f0">-</strong>
+        Alto calculado automÃ¡ticamente: <strong id="mergeHeightDisplay" style="color:#e2e8f0">-</strong>
       </div>
       
       <div style="margin-top: 0.5rem; border-top: 1px solid #1e293b; padding-top: 0.85rem;">
@@ -271,21 +271,21 @@
     <div class="preview-area" style="justify-content:center; align-items:center; padding: 2rem;">
       <div id="mergeWorkspaceWrap" class="qr-canvas-wrap" style="position:relative; width:100%; max-width:450px; margin:0 auto; display:none; background:none; box-shadow:0 10px 40px rgba(0,0,0,0.5)">
         <img id="mergeTemplateImg" style="width:100%; display:block; border-radius:8px; pointer-events:none;" />
-        <div id="mergeQrBox" style="position:absolute; aspect-ratio:1/1; border:2px dashed #6366f1; cursor:grab; box-shadow:0 4px 12px rgba(0,0,0,0.25); background:rgba(255,255,255,0.1); touch-action:none;">
-          <img id="mergeQrImg" style="width:100%; height:100%; display:block; pointer-events:none;" />
+        <div id="mergeQrBox" style="position:absolute;  border:2px dashed #6366f1; cursor:grab; box-shadow:0 4px 12px rgba(0,0,0,0.25); background:rgba(255,255,255,0.1); touch-action:none;">
+          <img id="mergeQrImg" style="width:100%; height:auto; display:block; pointer-events:none;" />
           <div id="mergeResizeHandle" style="position:absolute; bottom:-7px; right:-7px; width:16px; height:16px; background:#6366f1; border:2px solid #fff; border-radius:50%; cursor:nwse-resize; touch-action:none;"></div>
         </div>
       </div>
       <div id="mergePlaceholder" class="placeholder">
         <svg width="56" height="56" fill="none" stroke="#374151" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-        <p>Sube una plantilla para ubicar tu código QR.</p>
+        <p>Sube una plantilla para ubicar tu cÃ³digo QR.</p>
       </div>
     </div>
   </section>
 </main>
 
 
-<!-- ═══ TOAST ═══ -->
+<!-- â•â•â• TOAST â•â•â• -->
 <div id="toast" class="toast hidden">
   <div id="toastInner" class="toast-inner">
     <span id="toastIcon"></span>
@@ -293,11 +293,11 @@
   </div>
 </div>
 
-<!-- ═══ LOADING ═══ -->
+<!-- â•â•â• LOADING â•â•â• -->
 <div id="loadingOverlay" class="loading-overlay" style="display:none">
   <div class="loading-box">
     <div class="spinner"></div>
-    <p id="loadingMsg">Generando PDF…</p>
+    <p id="loadingMsg">Generando PDFâ€¦</p>
   </div>
 </div>
 
@@ -308,3 +308,4 @@
 <script src="merge.js" type="module"></script>
 </body>
 </html>
+

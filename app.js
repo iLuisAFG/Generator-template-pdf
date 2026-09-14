@@ -1,6 +1,6 @@
-// ═══════════════════════════════════════════════════════════════════════
-//  app.js  —  Generador de Plantillas de Impresión v3
-// ═══════════════════════════════════════════════════════════════════════
+﻿// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  app.js  â€”  Generador de Plantillas de ImpresiÃ³n v3
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const PAPER_SIZES = {
   letter:  { w: 215.9, h: 279.4 },
@@ -55,7 +55,7 @@ const uid = () => ++_uid;
 
 function showToast(msg, type = 'success') {
   toastInner.className = 'toast-inner toast-' + type;
-  toastIcon.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  toastIcon.textContent = type === 'success' ? 'âœ“' : type === 'error' ? 'âœ•' : 'â„¹';
   toastMsg.textContent = msg;
   toast.classList.remove('hidden');
   clearTimeout(toast._t);
@@ -63,7 +63,7 @@ function showToast(msg, type = 'success') {
 }
 window.showToast = showToast; // global for other modules
 
-function setLoading(visible, msg = 'Generando PDF…') {
+function setLoading(visible, msg = 'Generando PDFâ€¦') {
   loadingMsg.textContent = msg;
   loadingOverlay.style.display = visible ? 'flex' : 'none';
 }
@@ -80,9 +80,9 @@ function hexToRGBA(hex, pct) {
   return `rgba(${r},${g},${b},${pct/100})`;
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  IMAGES & WATERMARKS
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function addImageFile(file) {
   return new Promise((resolve) => {
@@ -133,7 +133,7 @@ function renderImgList() {
       <div class="img-item-header">
         <img class="img-thumb" src="${img.dataURL}" alt="${img.name}" />
         <span class="img-name" title="${img.name}">${img.name}</span>
-        <button class="img-delete" data-del="${img.id}">✕</button>
+        <button class="img-delete" data-del="${img.id}">âœ•</button>
       </div>
       <div class="img-item-body">
         <div><label class="lbl">Ancho (cm)</label><input class="input img-w" type="number" min="0.5" max="200" step="0.1" value="${img.wCm}" /></div>
@@ -159,6 +159,7 @@ watermarkInput.addEventListener('change', e => {
         watermarks.push({ id: uid(), url: ev.target.result, img: img, x: 20, y: 20, w: 50, opacity: 50 });
         renderWatermarksList();
         renderPreview();
+        if (images.length === 0) showToast('Sube también una imagen de diseño para ver la hoja.', 'info');
       };
       img.src = ev.target.result;
     };
@@ -176,7 +177,7 @@ function renderWatermarksList() {
       <div class="img-item-header">
         <img class="img-thumb" src="${wm.url}" />
         <span class="img-name">Marca de agua</span>
-        <button class="img-delete" data-del="${wm.id}">✕</button>
+        <button class="img-delete" data-del="${wm.id}">âœ•</button>
       </div>
       <div class="img-item-body" style="grid-template-columns: 1fr auto; align-items:center;">
         <div>
@@ -207,9 +208,9 @@ function renderWatermarksList() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  BORDER & LAYOUT
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function getBorderOpts() {
   return {
@@ -333,10 +334,10 @@ function renderPreview() {
 
   const totalSlots = pages.reduce((s, p) => s + p.items.length, 0);
   statsBar.classList.remove('hidden');
-  statPages.innerHTML = `<strong>${pages.length}</strong> página(s)`;
+  statPages.innerHTML = `<strong>${pages.length}</strong> pÃ¡gina(s)`;
   statSlots.innerHTML = `<strong>${totalSlots}</strong> cop. total`;
   statTotal.innerHTML = `<strong>${images.length}</strong> imagen(es)`;
-  statGrid.innerHTML  = pages.length ? `<strong>${pages[0].cols}×${pages[0].rows}</strong> (1ª pág)` : '';
+  statGrid.innerHTML  = pages.length ? `<strong>${pages[0].cols}Ã—${pages[0].rows}</strong> (1Âª pÃ¡g)` : '';
 
   pagesContainer.innerHTML = '';
   placeholder.classList.add('hidden');
@@ -355,7 +356,7 @@ function renderPreview() {
     wrap.className = 'page-wrap';
     const lbl = document.createElement('span');
     lbl.className = 'page-label';
-    lbl.textContent = `Página ${pgIdx+1} de ${pages.length} — ${items.length} elemento(s)`;
+    lbl.textContent = `PÃ¡gina ${pgIdx+1} de ${pages.length} â€” ${items.length} elemento(s)`;
     wrap.appendChild(lbl);
 
     const canvasWrap = document.createElement('div');
@@ -394,7 +395,7 @@ function renderPreview() {
       const layer = document.createElement('div');
       layer.className = 'watermarks-layer';
       layer.style.position = 'absolute';
-      layer.style.inset = '0';
+      layer.style.top = '0'; layer.style.left = '0'; layer.style.width = '100%'; layer.style.height = '100%';
       layer.style.pointerEvents = 'none';
       layer.style.overflow = 'hidden';
       watermarks.forEach(wm => {
@@ -404,7 +405,7 @@ function renderPreview() {
         box.style.left = wm.x + '%';
         box.style.top = wm.y + '%';
         box.style.width = wm.w + '%';
-        box.style.aspectRatio = (wm.img.width / wm.img.height) + '';
+        
         box.style.border = '2px dashed rgba(99,102,241, 0.8)';
         box.style.cursor = 'grab';
         box.style.pointerEvents = 'auto';
@@ -414,7 +415,7 @@ function renderPreview() {
         const img = document.createElement('img');
         img.src = wm.url;
         img.style.width = '100%';
-        img.style.height = '100%';
+        img.style.height = 'auto';
         img.style.opacity = wm.opacity / 100;
         img.style.pointerEvents = 'none';
         
@@ -440,19 +441,19 @@ function renderPreview() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  PDF EXPORT
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 async function exportPDF() {
   if (!images.length) return showToast('Carga al menos una imagen', 'error');
-  setLoading(true, 'Preparando PDF…');
+  setLoading(true, 'Preparando PDFâ€¦');
   await new Promise(r => setTimeout(r, 50));
 
   try {
     const queue = buildQueue();
     const pages = buildPages(queue);
-    if (!pages.length) throw new Error('Sin páginas');
+    if (!pages.length) throw new Error('Sin pÃ¡ginas');
 
     const paper = getPaperMM();
     const { jsPDF } = window.jspdf;
@@ -467,7 +468,7 @@ async function exportPDF() {
 
     for (let pgIdx = 0; pgIdx < pages.length; pgIdx++) {
       if (pgIdx > 0) doc.addPage();
-      loadingMsg.textContent = `Página ${pgIdx+1} de ${pages.length}…`;
+      loadingMsg.textContent = `PÃ¡gina ${pgIdx+1} de ${pages.length}â€¦`;
       await new Promise(r => setTimeout(r, 0));
 
       const { cols, rows, items, dWmm, dHmm, margMM, gapMM } = pages[pgIdx];
@@ -517,9 +518,9 @@ async function exportPDF() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  EVENTS & DRAG LOGIC
-// ═══════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 let _autoTimer = null;
 function triggerAutoPreview() {
@@ -619,3 +620,7 @@ pagesContainer.addEventListener('pointerup', e => {
 });
 
 updateBorderLivePreview();
+
+
+
+
