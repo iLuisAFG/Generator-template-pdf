@@ -1,6 +1,6 @@
-�// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
-//  qr.js  �  Generador de Códigos QR Avanzado
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
+//  qr.js - Generador de Códigos QR Avanzado
+// =======================================================================
 
 const qrData = document.getElementById('qrData');
 const qrDotsType = document.getElementById('qrDotsType');
@@ -55,27 +55,29 @@ const qrCode = new QRCodeStyling({
 });
 
 // Append to DOM
-qrCode.append(qrCanvas);
+if (qrCanvas) {
+  qrCode.append(qrCanvas);
+}
 
 function updateQR() {
   qrCode.update({
-    data: qrData.value || " ",
+    data: (qrData && qrData.value) ? qrData.value : "https://tu-enlace.com",
     dotsOptions: {
-      type: qrDotsType.value,
-      color: qrDotsColor.value
+      type: qrDotsType ? qrDotsType.value : "extra-rounded",
+      color: qrDotsColor ? qrDotsColor.value : "#000000"
     },
     backgroundOptions: {
-      color: qrTransparent.checked ? "transparent" : qrBgColor.value
+      color: (qrTransparent && qrTransparent.checked) ? "transparent" : (qrBgColor ? qrBgColor.value : "#ffffff")
     },
     cornersSquareOptions: {
-      type: qrCornerSquareType.value,
-      color: qrCornerSquareColor.value
+      type: qrCornerSquareType ? qrCornerSquareType.value : "extra-rounded",
+      color: qrCornerSquareColor ? qrCornerSquareColor.value : "#000000"
     },
     cornersDotOptions: {
-      type: qrCornerDotType.value,
-      color: qrCornerDotColor.value
+      type: qrCornerDotType ? qrCornerDotType.value : "dot",
+      color: qrCornerDotColor ? qrCornerDotColor.value : "#000000"
     },
-    margin: parseInt(qrMargin.value) || 0,
+    margin: qrMargin ? (parseInt(qrMargin.value) || 0) : 10,
     image: qrLogoUrl || ""
   });
 }
@@ -85,12 +87,12 @@ const inputs = [
   qrData, qrDotsType, qrDotsColor, qrCornerSquareType, 
   qrCornerSquareColor, qrCornerDotType, qrCornerDotColor, 
   qrBgColor, qrMargin, qrTransparent
-];
+].filter(Boolean);
 
 inputs.forEach(el => {
   el.addEventListener('input', () => {
-    if (el === qrDotsColor) qrDotsColorHex.textContent = el.value;
-    if (el === qrBgColor) qrBgColorHex.textContent = el.value;
+    if (el === qrDotsColor && qrDotsColorHex) qrDotsColorHex.textContent = el.value;
+    if (el === qrBgColor && qrBgColorHex) qrBgColorHex.textContent = el.value;
     updateQR();
   });
   el.addEventListener('change', updateQR);
@@ -102,44 +104,52 @@ function loadLogo(file) {
   const reader = new FileReader();
   reader.onload = e => {
     qrLogoUrl = e.target.result;
-    qrLogoPreview.src = qrLogoUrl;
-    qrLogoPreviewWrap.classList.remove('hidden');
+    if (qrLogoPreview) qrLogoPreview.src = qrLogoUrl;
+    if (qrLogoPreviewWrap) qrLogoPreviewWrap.classList.remove('hidden');
     updateQR();
   };
   reader.readAsDataURL(file);
 }
 
-qrLogoInput.addEventListener('change', e => {
-  if (e.target.files[0]) loadLogo(e.target.files[0]);
-  e.target.value = '';
-});
+if (qrLogoInput) {
+  qrLogoInput.addEventListener('change', e => {
+    if (e.target.files[0]) loadLogo(e.target.files[0]);
+    e.target.value = '';
+  });
+}
 
-qrLogoDrop.addEventListener('dragover', e => { e.preventDefault(); qrLogoDrop.classList.add('drag-over'); });
-qrLogoDrop.addEventListener('dragleave', () => qrLogoDrop.classList.remove('drag-over'));
-qrLogoDrop.addEventListener('drop', e => {
-  e.preventDefault();
-  qrLogoDrop.classList.remove('drag-over');
-  if (e.dataTransfer.files[0]) loadLogo(e.dataTransfer.files[0]);
-});
+if (qrLogoDrop) {
+  qrLogoDrop.addEventListener('dragover', e => { e.preventDefault(); qrLogoDrop.classList.add('drag-over'); });
+  qrLogoDrop.addEventListener('dragleave', () => qrLogoDrop.classList.remove('drag-over'));
+  qrLogoDrop.addEventListener('drop', e => {
+    e.preventDefault();
+    qrLogoDrop.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) loadLogo(e.dataTransfer.files[0]);
+  });
+}
 
-qrLogoClear.addEventListener('click', () => {
-  qrLogoUrl = null;
-  qrLogoPreview.src = '';
-  qrLogoPreviewWrap.classList.add('hidden');
-  updateQR();
-});
+if (qrLogoClear) {
+  qrLogoClear.addEventListener('click', () => {
+    qrLogoUrl = null;
+    if (qrLogoPreview) qrLogoPreview.src = '';
+    if (qrLogoPreviewWrap) qrLogoPreviewWrap.classList.add('hidden');
+    updateQR();
+  });
+}
 
 // Download buttons
-btnDownloadQRPng.addEventListener('click', () => {
-  qrCode.download({ extension: "png", name: "codigo_qr" });
-});
+if (btnDownloadQRPng) {
+  btnDownloadQRPng.addEventListener('click', () => {
+    qrCode.download({ extension: "png", name: "codigo_qr" });
+  });
+}
 
-btnDownloadQRSvg.addEventListener('click', () => {
-  qrCode.download({ extension: "svg", name: "codigo_qr" });
-});
+if (btnDownloadQRSvg) {
+  btnDownloadQRSvg.addEventListener('click', () => {
+    qrCode.download({ extension: "svg", name: "codigo_qr" });
+  });
+}
 
-// Initial render
-updateQR();
 // Send to merge tab
 const btnSendToMerge = document.getElementById('btnSendToMerge');
 if (btnSendToMerge) {
@@ -149,14 +159,16 @@ if (btnSendToMerge) {
       if (window.loadQrIntoMerge) {
         window.loadQrIntoMerge(url);
       } else {
-        // En caso de que merge.js an no haya cargado
         window.pendingQrUrl = url;
       }
       const mergeTabBtn = document.querySelector('.tab-btn[data-target="tab-merge"]');
       if (mergeTabBtn) mergeTabBtn.click();
     }).catch(err => {
       console.error(err);
-      if(window.showToast) window.showToast('Error generando QR', 'error');
+      if (window.showToast) window.showToast('Error generando QR', 'error');
     });
   });
 }
+
+// Initial render
+updateQR();

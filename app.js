@@ -1,6 +1,6 @@
-�// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
-//  app.js  �  Generador de Plantillas de Impresión v3
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
+//  app.js - Generador de Plantillas de Impresión v3
+// =======================================================================
 
 const PAPER_SIZES = {
   letter:  { w: 215.9, h: 279.4 },
@@ -55,7 +55,7 @@ const uid = () => ++_uid;
 
 function showToast(msg, type = 'success') {
   toastInner.className = 'toast-inner toast-' + type;
-  toastIcon.textContent = type === 'success' ? '�S' : type === 'error' ? '�S"' : '��';
+  toastIcon.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
   toastMsg.textContent = msg;
   toast.classList.remove('hidden');
   clearTimeout(toast._t);
@@ -63,7 +63,7 @@ function showToast(msg, type = 'success') {
 }
 window.showToast = showToast; // global for other modules
 
-function setLoading(visible, msg = 'Generando PDF⬦') {
+function setLoading(visible, msg = 'Generando PDF...') {
   loadingMsg.textContent = msg;
   loadingOverlay.style.display = visible ? 'flex' : 'none';
 }
@@ -80,14 +80,14 @@ function hexToRGBA(hex, pct) {
   return `rgba(${r},${g},${b},${pct/100})`;
 }
 
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
 //  IMAGES & WATERMARKS
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
 
 function addImageFile(file) {
   return new Promise((resolve) => {
     if (!file.type.startsWith('image/')) {
-      showToast(`"${file.name}" no es PNG/JPG`, 'error');
+      showToast(`"${file.name}" no es una imagen válida`, 'error');
       return resolve();
     }
     const reader = new FileReader();
@@ -133,7 +133,7 @@ function renderImgList() {
       <div class="img-item-header">
         <img class="img-thumb" src="${img.dataURL}" alt="${img.name}" />
         <span class="img-name" title="${img.name}">${img.name}</span>
-        <button class="img-delete" data-del="${img.id}">�S"</button>
+        <button class="img-delete" data-del="${img.id}">✕</button>
       </div>
       <div class="img-item-body">
         <div><label class="lbl">Ancho (cm)</label><input class="input img-w" type="number" min="0.5" max="200" step="0.1" value="${img.wCm}" /></div>
@@ -148,27 +148,30 @@ function renderImgList() {
   });
 }
 
-watermarkInput.addEventListener('change', e => {
-  if (e.target.files.length) {
-    const file = e.target.files[0];
-    if (!file.type.startsWith('image/')) return showToast("No es PNG/JPG", "error");
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const img = new Image();
-      img.onload = () => {
-        watermarks.push({ id: uid(), url: ev.target.result, img: img, x: 20, y: 20, w: 50, opacity: 50 });
-        renderWatermarksList();
-        renderPreview();
-        if (images.length === 0) showToast('Sube tambi�n una imagen de dise�o para ver la hoja.', 'info');
+if (watermarkInput) {
+  watermarkInput.addEventListener('change', e => {
+    if (e.target.files.length) {
+      const file = e.target.files[0];
+      if (!file.type.startsWith('image/')) return showToast("No es una imagen válida", "error");
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          watermarks.push({ id: uid(), url: ev.target.result, img: img, x: 20, y: 20, w: 50, opacity: 50 });
+          renderWatermarksList();
+          renderPreview();
+          if (images.length === 0) showToast('Sube también imágenes de diseño para ver la hoja.', 'info');
+        };
+        img.src = ev.target.result;
       };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-  e.target.value = '';
-});
+      reader.readAsDataURL(file);
+    }
+    e.target.value = '';
+  });
+}
 
 function renderWatermarksList() {
+  if (!watermarksList) return;
   watermarksList.innerHTML = '';
   watermarks.forEach(wm => {
     const item = document.createElement('div');
@@ -177,7 +180,7 @@ function renderWatermarksList() {
       <div class="img-item-header">
         <img class="img-thumb" src="${wm.url}" />
         <span class="img-name">Marca de agua</span>
-        <button class="img-delete" data-del="${wm.id}">�S"</button>
+        <button class="img-delete" data-del="${wm.id}">✕</button>
       </div>
       <div class="img-item-body" style="grid-template-columns: 1fr auto; align-items:center;">
         <div>
@@ -194,7 +197,7 @@ function renderWatermarksList() {
     const range = item.querySelector('.wm-op-range');
     const lbl = item.querySelector('.wm-op-lbl');
     range.addEventListener('input', e => {
-      wm.opacity = e.target.value;
+      wm.opacity = parseInt(e.target.value) || 0;
       lbl.textContent = `Opacidad (${wm.opacity}%)`;
       const boxImg = document.querySelector(`.wm-box[data-id="${wm.id}"] img`);
       if(boxImg) boxImg.style.opacity = wm.opacity / 100;
@@ -208,9 +211,9 @@ function renderWatermarksList() {
   });
 }
 
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
 //  BORDER & LAYOUT
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
 
 function getBorderOpts() {
   return {
@@ -243,6 +246,7 @@ function pdfSetLineDash(doc, style, widthMM) {
 function updateBorderLivePreview() {
   const b = getBorderOpts();
   const c = borderLiveCanvas;
+  if (!c) return;
   const ctx = c.getContext('2d');
   ctx.clearRect(0, 0, c.width, c.height);
   ctx.fillStyle = '#ffffff';
@@ -270,7 +274,7 @@ function drawCutMarksCtx(ctx, x, y, w, h, SIZE, OFFSET) {
   ctx.lineWidth = 0.5;
   ctx.setLineDash([]);
   const corners = [[x, y, 1, 1], [x+w, y, -1, 1], [x, y+h, 1, -1], [x+w, y+h, -1, -1]];
-  corners.forEach(([cx, cy, dx, dy]) => {
+  corners.forEach(([cx, cy, dy, dx]) => {
     ctx.beginPath();
     ctx.moveTo(cx + dx*OFFSET, cy); ctx.lineTo(cx + dx*(OFFSET+SIZE), cy);
     ctx.moveTo(cx, cy + dy*OFFSET); ctx.lineTo(cx, cy + dy*(OFFSET+SIZE));
@@ -327,7 +331,12 @@ function buildPages(queue) {
 }
 
 function renderPreview() {
-  if (!images.length) return;
+  if (!images.length) {
+    pagesContainer.innerHTML = '';
+    placeholder.classList.remove('hidden');
+    statsBar.classList.add('hidden');
+    return;
+  }
   const queue = buildQueue();
   const pages = buildPages(queue);
   if (!pages.length) return showToast('Error en dimensiones', 'error');
@@ -337,7 +346,7 @@ function renderPreview() {
   statPages.innerHTML = `<strong>${pages.length}</strong> página(s)`;
   statSlots.innerHTML = `<strong>${totalSlots}</strong> cop. total`;
   statTotal.innerHTML = `<strong>${images.length}</strong> imagen(es)`;
-  statGrid.innerHTML  = pages.length ? `<strong>${pages[0].cols}�${pages[0].rows}</strong> (1ª pág)` : '';
+  statGrid.innerHTML  = pages.length ? `<strong>${pages[0].cols} x ${pages[0].rows}</strong> (1ª pág)` : '';
 
   pagesContainer.innerHTML = '';
   placeholder.classList.add('hidden');
@@ -356,7 +365,7 @@ function renderPreview() {
     wrap.className = 'page-wrap';
     const lbl = document.createElement('span');
     lbl.className = 'page-label';
-    lbl.textContent = `Página ${pgIdx+1} de ${pages.length} � ${items.length} elemento(s)`;
+    lbl.textContent = `Página ${pgIdx+1} de ${pages.length} — ${items.length} elemento(s)`;
     wrap.appendChild(lbl);
 
     const canvasWrap = document.createElement('div');
@@ -441,19 +450,19 @@ function renderPreview() {
   });
 }
 
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
 //  PDF EXPORT
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
 
 async function exportPDF() {
   if (!images.length) return showToast('Carga al menos una imagen', 'error');
-  setLoading(true, 'Preparando PDF⬦');
+  setLoading(true, 'Preparando PDF...');
   await new Promise(r => setTimeout(r, 50));
 
   try {
     const queue = buildQueue();
     const pages = buildPages(queue);
-    if (!pages.length) throw new Error('Sin páginas');
+    if (!pages.length) throw new Error('Sin páginas que generar');
 
     const paper = getPaperMM();
     const { jsPDF } = window.jspdf;
@@ -468,7 +477,7 @@ async function exportPDF() {
 
     for (let pgIdx = 0; pgIdx < pages.length; pgIdx++) {
       if (pgIdx > 0) doc.addPage();
-      loadingMsg.textContent = `Página ${pgIdx+1} de ${pages.length}⬦`;
+      loadingMsg.textContent = `Página ${pgIdx+1} de ${pages.length}...`;
       await new Promise(r => setTimeout(r, 0));
 
       const { cols, rows, items, dWmm, dHmm, margMM, gapMM } = pages[pgIdx];
@@ -518,9 +527,9 @@ async function exportPDF() {
   }
 }
 
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
 //  EVENTS & DRAG LOGIC
-// �"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"�
+// =======================================================================
 
 let _autoTimer = null;
 function triggerAutoPreview() {
@@ -561,15 +570,18 @@ borderColor.addEventListener('input', () => { borderColorHex.textContent = borde
 btnPreview.addEventListener('click', renderPreview);
 btnExport.addEventListener('click', exportPDF);
 
+// Tab switching
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
     btn.classList.add('tab-active');
     document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-    document.getElementById(btn.dataset.target).style.display = 'grid';
+    const target = document.getElementById(btn.dataset.target);
+    if (target) target.style.display = 'grid';
   });
 });
 
+// Watermark drag & resize
 let activeWm = null, isWResizing = false, startPointerX, startPointerY, startWmX, startWmY, startWmW;
 
 pagesContainer.addEventListener('pointerdown', e => {
@@ -620,7 +632,3 @@ pagesContainer.addEventListener('pointerup', e => {
 });
 
 updateBorderLivePreview();
-
-
-
-
