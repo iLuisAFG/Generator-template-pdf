@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Generador de Plantillas de Impresión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,12 +14,16 @@
 <!-- ========================= HEADER ========================= -->
 <header>
   <div class="header-inner">
-    <svg width="28" height="28" fill="none" stroke="#818cf8" stroke-width="2" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
-    </svg>
-    <div>
-      <h1>Generador de Plantillas de Impresión</h1>
-      <p class="subtitle">Distribuye imágenes y exporta a PDF listo para imprimir</p>
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Generador de Plantillas</h1>
+        <p class="subtitle">Distribuye imágenes y exporta a PDF listo para imprimir</p>
+      </div>
     </div>
     <nav class="tabs">
       <button class="tab-btn tab-active" data-target="tab-pdf">Plantillas PDF</button>
@@ -32,13 +39,13 @@
     <!-- Imágenes -->
     <section class="card">
       <h2 class="section-title">
-        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         Imágenes de diseño
       </h2>
       <!-- Drop zone -->
       <label id="dropZone" class="drop-zone">
-        <svg width="36" height="36" fill="none" stroke="#6b7280" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-        <span class="drop-text">Arrastra o <span class="accent">selecciona</span> PNG/JPG<br><small style="color:#6b7280">(puedes elegir varias a la vez)</small></span>
+        <svg width="34" height="34" fill="none" stroke="#0066ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+        <span class="drop-text">Arrastra o <span class="accent">selecciona</span> PNG/JPG<br><small style="color:#64748b">(puedes elegir varias a la vez)</small></span>
         <input id="imgInput" type="file" accept="image/*" multiple style="display:none" />
       </label>
       <div id="imgList" class="img-list"></div>
@@ -47,7 +54,7 @@
     <!-- Papel y márgenes -->
     <section class="card">
       <h2 class="section-title">
-        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         Papel y márgenes
       </h2>
       <div>
@@ -80,7 +87,7 @@
     <!-- Borde -->
     <section class="card">
       <h2 class="section-title">
-        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
         Borde de imagen
       </h2>
       <div>
@@ -105,22 +112,22 @@
     <!-- Copias y opciones -->
     <section class="card">
       <h2 class="section-title">
-        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
         Copias y opciones
       </h2>
       <div><label class="lbl">Cantidad total de copias</label><input id="copies" type="number" min="1" max="9999" value="10" class="input" /></div>
       <label class="toggle-row"><div class="toggle-wrap"><input id="cutMarks" type="checkbox" checked /><span class="toggle-track"></span><span class="toggle-thumb"></span></div><span>Marcas de corte</span></label>
       <label class="toggle-row"><div class="toggle-wrap"><input id="fillPage" type="checkbox" /><span class="toggle-track"></span><span class="toggle-thumb"></span></div><span>Rellenar página completa</span></label>
-      <div style="margin-top: 0.5rem; border-top: 1px solid #1e293b; padding-top: 0.85rem;">
+      <div style="margin-top: 0.5rem; border-top: 1px solid #e2e8f0; padding-top: 0.85rem;">
         <label class="lbl">Nombre del archivo</label>
-        <div style="display: flex; align-items: center; gap: 0.5rem;"><input id="pdfFileName" type="text" value="plantilla_impresion" class="input" style="flex: 1;" placeholder="Ej. mis_etiquetas" /><span style="color: #64748b; font-size: 0.8rem;">.pdf</span></div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;"><input id="pdfFileName" type="text" value="plantilla_impresion" class="input" style="flex: 1;" placeholder="Ej. mis_etiquetas" /><span style="color: #64748b; font-size: 0.85rem; font-weight: 600;">.pdf</span></div>
       </div>
     </section>
 
     <!-- Marca de agua -->
     <section class="card">
       <h2 class="section-title">
-        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
         Marca de agua
       </h2>
       <label class="drop-zone" style="min-height:70px">
@@ -147,7 +154,7 @@
     </div>
     <div id="previewArea" class="preview-area">
       <div id="placeholder" class="placeholder">
-        <svg width="56" height="56" fill="none" stroke="#374151" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        <svg width="56" height="56" fill="none" stroke="#cbd5e1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
         <p>Carga una imagen y configura las opciones<br>para ver la vista previa aquí.</p>
       </div>
       <div id="pagesContainer" class="pages-container hidden"></div>
@@ -222,7 +229,7 @@
         <input id="qrLogoInput" type="file" accept="image/*" style="display:none" />
       </label>
       <div id="qrLogoPreviewWrap" class="hidden" style="margin-top:0.5rem; display:flex; align-items:center; gap:0.5rem">
-        <img id="qrLogoPreview" style="height:30px; border-radius:4px" />
+        <img id="qrLogoPreview" style="height:34px; border-radius:6px; border:1px solid #e2e8f0;" />
         <button id="qrLogoClear" class="img-delete">✕ Quitar logo</button>
       </div>
     </section>
@@ -249,7 +256,7 @@
       <button id="btnDownloadQRPng" class="btn-secondary">Descargar PNG</button>
       <button id="btnDownloadQRSvg" class="btn-secondary">Descargar SVG</button>
     </div>
-    <button id="btnSendToMerge" class="btn-primary" style="margin-top:0.5rem; width:100%; background:#10b981; border:none;">Unir a Plantilla ➜</button>
+    <button id="btnSendToMerge" class="btn-primary" style="margin-top:0.5rem; width:100%;">Unir a Plantilla ➜</button>
   </aside>
 
   <section class="preview-section">
@@ -287,11 +294,11 @@
           <input id="mergeWidth" type="number" value="1080" class="input" />
         </div>
       </div>
-      <div style="margin-top:0.5rem; font-size:0.75rem; color:#94a3b8">
-        Alto calculado automáticamente: <strong id="mergeHeightDisplay" style="color:#e2e8f0">-</strong>
+      <div style="margin-top:0.5rem; font-size:0.75rem; color:#64748b; font-weight:500;">
+        Alto calculado automáticamente: <strong id="mergeHeightDisplay" style="color:#0066ff">-</strong>
       </div>
       
-      <div style="margin-top: 0.5rem; border-top: 1px solid #1e293b; padding-top: 0.85rem;">
+      <div style="margin-top: 0.5rem; border-top: 1px solid #e2e8f0; padding-top: 0.85rem;">
         <label class="lbl">Nombre del archivo</label>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <input id="mergeFileName" type="text" value="qr_plantilla" class="input" style="flex: 1;" />
@@ -307,15 +314,15 @@
 
   <section class="preview-section">
     <div class="preview-area" style="justify-content:center; align-items:center; padding: 2rem;">
-      <div id="mergeWorkspaceWrap" class="qr-canvas-wrap" style="position:relative; width:100%; max-width:450px; margin:0 auto; display:none; background:none; box-shadow:0 10px 40px rgba(0,0,0,0.5)">
-        <img id="mergeTemplateImg" style="width:100%; display:block; border-radius:8px; pointer-events:none;" />
-        <div id="mergeQrBox" style="position:absolute; border:2px dashed #6366f1; cursor:grab; box-shadow:0 4px 12px rgba(0,0,0,0.25); background:rgba(255,255,255,0.1); touch-action:none;">
+      <div id="mergeWorkspaceWrap" class="qr-canvas-wrap" style="position:relative; width:100%; max-width:450px; margin:0 auto; display:none; background:none; box-shadow:0 12px 36px rgba(15,23,42,0.12)">
+        <img id="mergeTemplateImg" style="width:100%; display:block; border-radius:12px; pointer-events:none;" />
+        <div id="mergeQrBox" style="position:absolute; border:2px dashed #0066ff; cursor:grab; box-shadow:0 6px 16px rgba(0,102,255,0.25); background:rgba(0,102,255,0.05); touch-action:none; border-radius:4px;">
           <img id="mergeQrImg" style="width:100%; height:auto; display:block; pointer-events:none;" />
-          <div id="mergeResizeHandle" style="position:absolute; bottom:-7px; right:-7px; width:16px; height:16px; background:#6366f1; border:2px solid #fff; border-radius:50%; cursor:nwse-resize; touch-action:none;"></div>
+          <div id="mergeResizeHandle" style="position:absolute; bottom:-8px; right:-8px; width:18px; height:18px; background:#0066ff; border:2.5px solid #ffffff; border-radius:50%; cursor:nwse-resize; touch-action:none; box-shadow:0 2px 6px rgba(0,0,0,0.2);"></div>
         </div>
       </div>
       <div id="mergePlaceholder" class="placeholder">
-        <svg width="56" height="56" fill="none" stroke="#374151" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <svg width="56" height="56" fill="none" stroke="#cbd5e1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         <p>Sube una plantilla para ubicar tu código QR.</p>
       </div>
     </div>

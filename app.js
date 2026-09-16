@@ -415,7 +415,7 @@ function renderPreview() {
         box.style.top = wm.y + '%';
         box.style.width = wm.w + '%';
         
-        box.style.border = '2px dashed rgba(99,102,241, 0.8)';
+        box.style.border = '2px dashed rgba(0, 102, 255, 0.8)';
         box.style.cursor = 'grab';
         box.style.pointerEvents = 'auto';
         box.style.touchAction = 'none';
@@ -432,11 +432,13 @@ function renderPreview() {
         handle.className = 'resize-handle';
         handle.dataset.wmid = wm.id;
         handle.style.position = 'absolute';
-        handle.style.bottom = '-6px';
-        handle.style.right = '-6px';
-        handle.style.width = '14px';
-        handle.style.height = '14px';
-        handle.style.background = '#6366f1';
+        handle.style.bottom = '-7px';
+        handle.style.right = '-7px';
+        handle.style.width = '16px';
+        handle.style.height = '16px';
+        handle.style.background = '#0066ff';
+        handle.style.border = '2px solid #ffffff';
+        handle.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
         handle.style.borderRadius = '50%';
         handle.style.cursor = 'nwse-resize';
         handle.style.touchAction = 'none';
