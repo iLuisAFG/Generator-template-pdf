@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Generador de Plantillas de Impresión</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0066ff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Plantillas PDF" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,11 +32,19 @@
         <p class="subtitle">Distribuye imágenes y exporta a PDF listo para imprimir</p>
       </div>
     </div>
-    <nav class="tabs">
-      <button class="tab-btn tab-active" data-target="tab-pdf">Plantillas PDF</button>
-      <button class="tab-btn" data-target="tab-qr">Generador QR</button>
-      <button class="tab-btn" data-target="tab-merge">Unir a Plantilla</button>
-    </nav>
+    <div class="header-actions">
+      <button id="btnInstallApp" class="btn-install hidden" title="Instalar aplicación en tu dispositivo">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        <span>Instalar App</span>
+      </button>
+      <nav class="tabs">
+        <button class="tab-btn tab-active" data-target="tab-pdf">Plantillas PDF</button>
+        <button class="tab-btn" data-target="tab-qr">Generador QR</button>
+        <button class="tab-btn" data-target="tab-merge">Unir a Plantilla</button>
+      </nav>
+    </div>
   </div>
 </header>
 
@@ -350,5 +365,48 @@
 <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 <script src="qr.js" type="module"></script>
 <script src="merge.js" type="module"></script>
+
+<!-- PWA Registration & Install Script -->
+<script>
+  // Registro del Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('SW registrado:', reg.scope))
+        .catch(err => console.warn('Error al registrar SW:', err));
+    });
+  }
+
+  // Instalación de PWA (botón Instalar App)
+  let deferredPrompt = null;
+  const btnInstall = document.getElementById('btnInstallApp');
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (btnInstall) {
+      btnInstall.classList.remove('hidden');
+    }
+  });
+
+  if (btnInstall) {
+    btnInstall.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        btnInstall.classList.add('hidden');
+        if (window.showToast) window.showToast('¡Instalando aplicación!', 'success');
+      }
+      deferredPrompt = null;
+    });
+  }
+
+  window.addEventListener('appinstalled', () => {
+    if (btnInstall) btnInstall.classList.add('hidden');
+    deferredPrompt = null;
+    if (window.showToast) window.showToast('¡Aplicación instalada con éxito!', 'success');
+  });
+</script>
 </body>
 </html>
